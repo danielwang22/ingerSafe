@@ -16,7 +16,8 @@ class ResultDialog extends StatelessWidget {
     return Dialog(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
+        child: SingleChildScrollView(
+          child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -77,7 +78,13 @@ class ResultDialog extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  Expanded(child: Text(analysis)),
+                  Expanded(
+                      child: Text
+                        (
+                          analysis,
+                          style: TextStyle(fontFamily: 'zh-tw'),
+                        ),
+                  ),
                   IconButton(
                     icon: const Icon(Icons.copy),
                     onPressed: () {
@@ -91,6 +98,7 @@ class ResultDialog extends StatelessWidget {
               ),
             ),
           ],
+        ),
         ),
       ),
     );

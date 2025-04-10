@@ -19,8 +19,14 @@ class AIService {
         body: jsonEncode({
           'model': 'deepseek-chat',
           'messages': [
-            {'role': 'system', 'content': '你是一個擅長分析圖片文字內容的助理，請用繁體中文提供專業分析'},
-            {'role': 'user', 'content': '這是從圖片中提取的文字，請分析並提供見解：\n\n$text'}
+            {
+              "role": "system",
+              "content": "你是一個專業的健康分析助理，請以繁體中文提供有關圖片文字中提到的物質對孕婦或哺乳期女性的負面影響的專業分析。請避免提供任何有害或不安全的內容。"
+            },
+            {
+              "role": "user",
+              "content": "這是從圖片中提取的文字，請分析並提供見解：\n\n$text"
+            }
           ],
           'temperature': 0.7,
           'max_tokens': 1000
@@ -28,7 +34,8 @@ class AIService {
       );
 
       if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
+        // final data = jsonDecode(response.body);
+        final data = jsonDecode(utf8.decode(response.bodyBytes));
         return data['choices'][0]['message']['content'];
       } else {
         return 'API 請求失敗 (錯誤代碼 ${response.statusCode})';
