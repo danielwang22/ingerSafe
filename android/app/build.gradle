@@ -48,3 +48,8 @@ android {
 flutter {
     source = "../.."
 }
+
+dependencies {
+    // 👇 This is required for Chinese text recognition to work
+    implementation 'com.google.mlkit:text-recognition-chinese:16.0.0'
+}
