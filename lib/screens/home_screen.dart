@@ -69,6 +69,43 @@ class HomeScreen extends HookWidget {
       },
     };
 
+    final localizedLanguageNames = {
+      'en': {
+        'English': 'English',
+        'Chinese': 'Chinese',
+        'Japanese': 'Japanese',
+        'Korean': 'Korean',
+      },
+      'zh_Hant': {
+        'English': '英文',
+        'Chinese': '繁體中文',
+        'Japanese': '日文',
+        'Korean': '韓文',
+      },
+      'ja': {
+        'English': '英語',
+        'Chinese': '中国語',
+        'Japanese': '日本語',
+        'Korean': '韓国語',
+      },
+      'ko': {
+        'English': '영어',
+        'Chinese': '중국어',
+        'Japanese': '일본어',
+        'Korean': '한국어',
+      },
+    };
+
+    final langCode = selectedLanguageName.value == 'English'
+        ? 'en'
+        : selectedLanguageName.value == 'Chinese'
+        ? 'zh_Hant'
+        : selectedLanguageName.value == 'Japanese'
+        ? 'ja'
+        : 'ko'; // Default to Korean if nothing else matches
+
+    final localizedNames = localizedLanguageNames[langCode]!;
+
     final t = languageTexts[selectedLanguageName.value]!;
 
     Future<void> processAssetImage(String assetPath) async {
@@ -174,16 +211,52 @@ class HomeScreen extends HookWidget {
         title: const Text('IngreSafe'),
         actions: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            padding: const EdgeInsets.only(right: 12.0),
             child: DropdownButtonHideUnderline(
               child: DropdownButton<TextRecognitionScript>(
                 value: selectedLanguage.value,
                 icon: const Icon(Icons.language, color: Colors.white),
-                dropdownColor: Colors.blue,
+                alignment: Alignment.center,
+                dropdownColor: Colors.white.withOpacity(0.95),
+                borderRadius: BorderRadius.circular(12),
+                selectedItemBuilder: (BuildContext context) {
+                  return supportedLanguages.entries.map((entry) {
+                    final langText = localizedLanguageNames[
+                    selectedLanguageName.value == 'English'
+                        ? 'en'
+                        : selectedLanguageName.value == 'Chinese'
+                        ? 'zh_Hant'
+                        : selectedLanguageName.value == 'Japanese'
+                        ? 'ja'
+                        : 'ko'
+                    ]?[entry.key] ?? entry.key;
+
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Icon(Icons.language, color: Colors.black, size: 20),
+                        const SizedBox(width: 6),
+                        Text(
+                          langText,
+                          style: const TextStyle(color: Colors.black),
+                        ),
+                      ],
+                    );
+                  }).toList();
+                },
                 items: supportedLanguages.entries.map((entry) {
+                  final localizedNames = localizedLanguageNames[
+                  selectedLanguageName.value == 'English'
+                      ? 'en'
+                      : selectedLanguageName.value == 'Chinese'
+                      ? 'zh_Hant'
+                      : selectedLanguageName.value == 'Japanese'
+                      ? 'ja'
+                      : 'ko'
+                  ]!;
                   return DropdownMenuItem<TextRecognitionScript>(
                     value: entry.value,
-                    child: Text(entry.key),
+                    child: Text(localizedNames[entry.key] ?? entry.key),
                   );
                 }).toList(),
                 onChanged: (newLang) {
