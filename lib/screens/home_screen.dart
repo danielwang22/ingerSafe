@@ -138,6 +138,7 @@ class HomeScreen extends HookWidget {
             builder: (context) => ResultDialog(
               originalText: recognizedText,
               analysis: aiResult,
+              selectedLanguageName: langCode,
             ),
           );
         }
@@ -192,6 +193,7 @@ class HomeScreen extends HookWidget {
             builder: (context) => ResultDialog(
               originalText: recognizedText,
               analysis: aiResult,
+              selectedLanguageName: langCode,
             ),
           );
         }
@@ -217,7 +219,7 @@ class HomeScreen extends HookWidget {
                 value: selectedLanguage.value,
                 icon: const Icon(Icons.language, color: Colors.white),
                 alignment: Alignment.center,
-                dropdownColor: Colors.white.withOpacity(0.95),
+                dropdownColor: Colors.white.withValues(alpha: 0.95),
                 borderRadius: BorderRadius.circular(12),
                 selectedItemBuilder: (BuildContext context) {
                   return supportedLanguages.entries.map((entry) {
@@ -307,6 +309,7 @@ class HomeScreen extends HookWidget {
                       builder: (context) => ResultDialog(
                         originalText: item['text']!,
                         analysis: item['analysis']!,
+                        selectedLanguageName: langCode,
                       ),
                     ),
                   ),
