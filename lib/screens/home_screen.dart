@@ -217,9 +217,8 @@ class HomeScreen extends HookWidget {
             child: DropdownButtonHideUnderline(
               child: DropdownButton<TextRecognitionScript>(
                 value: selectedLanguage.value,
-                icon: const Icon(Icons.language, color: Colors.white),
+                icon: const Icon(Icons.language),
                 alignment: Alignment.center,
-                dropdownColor: Colors.white.withValues(alpha: 0.95),
                 borderRadius: BorderRadius.circular(12),
                 selectedItemBuilder: (BuildContext context) {
                   return supportedLanguages.entries.map((entry) {
@@ -236,11 +235,9 @@ class HomeScreen extends HookWidget {
                     return Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Icon(Icons.language, color: Colors.black, size: 20),
                         const SizedBox(width: 6),
                         Text(
                           langText,
-                          style: const TextStyle(color: Colors.black),
                         ),
                       ],
                     );
