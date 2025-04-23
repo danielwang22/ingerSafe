@@ -1,0 +1,20 @@
+{
+  "buildFiles": [
+    "/Users/kalzheng/Desktop/flutter/flutter/packages/flutter_tools/gradle/src/main/groovy/CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "/Users/kalzheng/Library/Android/sdk/cmake/3.22.1/bin/ninja",
+      "-C",
+      "/Users/kalzheng/Desktop/flutter/projects/AI-PHOTO-DETECTOR/android/app/.cxx/Debug/f4u6u6h1/x86",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "/Users/kalzheng/Library/Android/sdk/cmake/3.22.1/bin/ninja",
+    "-C",
+    "/Users/kalzheng/Desktop/flutter/projects/AI-PHOTO-DETECTOR/android/app/.cxx/Debug/f4u6u6h1/x86",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {}
+}

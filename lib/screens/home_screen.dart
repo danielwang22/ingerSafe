@@ -8,6 +8,8 @@ import '../widgets/result_dialog.dart';
 
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class HomeScreen extends HookWidget {
   const HomeScreen({super.key});
@@ -112,23 +114,18 @@ class HomeScreen extends HookWidget {
       try {
         isProcessing.value = true;
 
+        // Load image from assets and write to a temporary file
         final byteData = await DefaultAssetBundle.of(context).load(assetPath);
-        final file = File('${(await getTemporaryDirectory()).path}/temp_asset.jpg');
+        final tempDir = await getTemporaryDirectory();
+        final file = File('${tempDir.path}/temp_asset.jpg');
         await file.writeAsBytes(byteData.buffer.asUint8List());
 
-        final inputImage = InputImage.fromFile(file);
-        final textRecognizer = TextRecognizer(script: selectedLanguage.value);
-        final result = await textRecognizer.processImage(inputImage);
-        textRecognizer.close();
+        // Call AI processing with image file
+        final aiResult = await AIService.processImageWithAI(file);
 
-        final recognizedText = result.text;
-        if (recognizedText.isEmpty) {
-          throw Exception('No text detected in the asset image');
-        }
-
-        final aiResult = await AIService.processWithAI(recognizedText, selectedLanguageName.value);
+        // Store and show the result
         history.value = [
-          {'text': recognizedText, 'analysis': aiResult},
+          {'text': 'Asset image sent to AI', 'analysis': aiResult},
           ...history.value,
         ];
 
@@ -136,7 +133,7 @@ class HomeScreen extends HookWidget {
           showDialog(
             context: context,
             builder: (context) => ResultDialog(
-              originalText: recognizedText,
+              originalText: 'Asset image analyzed by AI',
               analysis: aiResult,
               selectedLanguageName: langCode,
             ),
@@ -158,32 +155,12 @@ class HomeScreen extends HookWidget {
 
       try {
         isProcessing.value = true;
+        final file = File(image.path);
 
-        String recognizedText;
-        if (kIsWeb) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(t['webUnsupported']!),
-              duration: const Duration(seconds: 3),
-            ),
-          );
-          return;
-        } else {
-          final inputImage = InputImage.fromFilePath(image.path);
-          final textRecognizer = TextRecognizer(script: selectedLanguage.value);
-          final result = await textRecognizer.processImage(inputImage);
-          textRecognizer.close();
-          recognizedText = result.text;
-        }
-
-        if (recognizedText.isEmpty) {
-          throw Exception('No text detected in the image');
-        }
-
-        final aiResult = await AIService.processWithAI(recognizedText, selectedLanguageName.value);
+        final aiResult = await AIService.processImageWithAI(file);
 
         history.value = [
-          {'text': recognizedText, 'analysis': aiResult},
+          {'text': 'Image sent to AI', 'analysis': aiResult},
           ...history.value,
         ];
 
@@ -191,7 +168,7 @@ class HomeScreen extends HookWidget {
           showDialog(
             context: context,
             builder: (context) => ResultDialog(
-              originalText: recognizedText,
+              originalText: 'Image content analyzed by AI',
               analysis: aiResult,
               selectedLanguageName: langCode,
             ),
