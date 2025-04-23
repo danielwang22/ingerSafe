@@ -126,7 +126,7 @@ class HomeScreen extends HookWidget {
           throw Exception('No text detected in the asset image');
         }
 
-        final aiResult = await AIService.processWithAI(recognizedText);
+        final aiResult = await AIService.processWithAI(recognizedText, selectedLanguageName.value);
         history.value = [
           {'text': recognizedText, 'analysis': aiResult},
           ...history.value,
@@ -180,7 +180,7 @@ class HomeScreen extends HookWidget {
           throw Exception('No text detected in the image');
         }
 
-        final aiResult = await AIService.processWithAI(recognizedText);
+        final aiResult = await AIService.processWithAI(recognizedText, selectedLanguageName.value);
 
         history.value = [
           {'text': recognizedText, 'analysis': aiResult},

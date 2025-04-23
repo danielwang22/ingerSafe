@@ -3,9 +3,12 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class AIService {
-  static Future<String> processWithAI(String text) async {
+  static Future<String> processWithAI(String text, selectedlanguage) async {
     if (text.trim().isEmpty) {
       return '未檢測到可分析的文字內容';
+    }
+    if(selectedlanguage == 'Chinese'){
+      selectedlanguage = "Traditional Chinese";
     }
 
     try {
@@ -25,7 +28,7 @@ class AIService {
             },
             {
               "role": "user",
-              "content": "這是從圖片中提取的文字，請分析並提供見解：\n\n$text"
+              "content": "回傳字請翻譯成$selectedlanguage, 這是從圖片中提取的文字，請分析並提供見解：\n\n$text"
             }
           ],
           'temperature': 0.7,
