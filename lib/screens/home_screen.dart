@@ -121,7 +121,7 @@ class HomeScreen extends HookWidget {
         await file.writeAsBytes(byteData.buffer.asUint8List());
 
         // Call AI processing with image file
-        final aiResult = await AIService.processImageWithAI(file);
+        final aiResult = await AIService.processImageWithAI(file, selectedLanguageName.value);
 
         // Store and show the result
         history.value = [
@@ -157,7 +157,7 @@ class HomeScreen extends HookWidget {
         isProcessing.value = true;
         final file = File(image.path);
 
-        final aiResult = await AIService.processImageWithAI(file);
+        final aiResult = await AIService.processImageWithAI(file,selectedLanguageName.value);
 
         history.value = [
           {'text': 'Image sent to AI', 'analysis': aiResult},
