@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
@@ -8,8 +7,6 @@ import '../widgets/result_dialog.dart';
 
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
-import 'dart:convert';
-import 'package:http/http.dart' as http;
 
 class HomeScreen extends HookWidget {
   const HomeScreen({super.key});
@@ -343,7 +340,7 @@ class HomeScreen extends HookWidget {
           FloatingActionButton(
             onPressed: isProcessing.value
                 ? null
-                : () => processAssetImage('assets/images/ingredients.jpeg'),
+                : () => processAssetImage('assets/images/wipes.jpg'),
             tooltip: t['useTestImage'],
             child: const Icon(Icons.image),
           ),
