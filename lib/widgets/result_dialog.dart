@@ -87,33 +87,6 @@ class ResultDialog extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Text(
-              labels['originalText']!,
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 8),
-            Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Colors.grey.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Row(
-                children: [
-                  Expanded(child: Text(originalText)),
-                  IconButton(
-                    icon: const Icon(Icons.copy),
-                    onPressed: () {
-                      Clipboard.setData(ClipboardData(text: originalText));
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text(labels['copyOriginal']!)),
-                      );
-                    },
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 16),
-            Text(
               labels['aiAnalysis']!,
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),

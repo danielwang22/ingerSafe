@@ -35,6 +35,7 @@ class HomeScreen extends HookWidget {
         'takePhoto': 'Take Photo',
         'chooseFromGallery': 'Choose from Gallery',
         'useTestImage': 'Use Test Image',
+        'aiResult': "Ai Result",
       },
       'Chinese': {
         'currentLanguage': '目前語言',
@@ -45,6 +46,7 @@ class HomeScreen extends HookWidget {
         'takePhoto': '拍照',
         'chooseFromGallery': '從相簿選擇',
         'useTestImage': '使用測試圖片',
+        'aiResult': "AI 結果",
       },
       'Japanese': {
         'currentLanguage': '現在の言語',
@@ -55,6 +57,7 @@ class HomeScreen extends HookWidget {
         'takePhoto': '写真を撮る',
         'chooseFromGallery': 'ギャラリーから選ぶ',
         'useTestImage': 'テスト画像を使う',
+        'aiResult': "AI結果",
       },
       'Korean': {
         'currentLanguage': '현재 언어',
@@ -65,6 +68,7 @@ class HomeScreen extends HookWidget {
         'takePhoto': '사진 찍기',
         'chooseFromGallery': '갤러리에서 선택',
         'useTestImage': '테스트 이미지 사용',
+        'aiResult': "AI 결과",
       },
     };
 
@@ -122,7 +126,7 @@ class HomeScreen extends HookWidget {
 
         // Store and show the result
         history.value = [
-          {'text': 'Asset image sent to AI', 'analysis': aiResult},
+          {'text': t['aiResult']!, 'analysis': aiResult},
           ...history.value,
         ];
 
