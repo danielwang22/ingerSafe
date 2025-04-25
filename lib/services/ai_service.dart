@@ -61,7 +61,8 @@ class AIService {
           'Authorization': 'Bearer ${dotenv.env['OPENAI_API_KEY']}',
         },
         body: jsonEncode({
-          "model": "gpt-4-turbo",
+          // "model": "gpt-4-turbo",
+          "model": "gpt-4o",
           "messages": [
             {
               // "role": "system",
