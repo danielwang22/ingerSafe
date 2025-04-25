@@ -343,7 +343,7 @@ class HomeScreen extends HookWidget {
           FloatingActionButton(
             onPressed: isProcessing.value
                 ? null
-                : () => processAssetImage('assets/images/wipes.jpg'),
+                : () => processAssetImage('assets/images/ingredients.jpeg'),
             tooltip: t['useTestImage'],
             child: const Icon(Icons.image),
           ),
