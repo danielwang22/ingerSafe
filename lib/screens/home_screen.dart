@@ -348,6 +348,27 @@ class HomeScreen extends HookWidget {
             tooltip: t['useTestImage'],
             child: const Icon(Icons.image),
           ),
+          const SizedBox(width: 16),
+          FloatingActionButton(
+            heroTag: 'aboutUsBtn',
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (_) => AlertDialog(
+                  title: const Text('About Us'),
+                  content: const Text('IngreSafe helps analyze product ingredients to ensure safety for pregnant or breastfeeding women.'),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text('Close'),
+                    ),
+                  ],
+                ),
+              );
+            },
+            tooltip: 'About Us',
+            child: const Icon(Icons.info_outline),
+          ),
         ],
       ),
     );
