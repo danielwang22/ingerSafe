@@ -47,5 +47,11 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<!-- Allowing the app to query for URLs -->
+        <key>LSApplicationQueriesSchemes</key>
+        <array>
+            <string>http</string>
+            <string>https</string>
+        </array>
 </dict>
 </plist>
