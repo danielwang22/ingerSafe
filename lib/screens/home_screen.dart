@@ -4,11 +4,15 @@ import 'package:image_picker/image_picker.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:flutter/gestures.dart'; // For TapGestureRecognizer
 import 'package:url_launcher/url_launcher.dart'; // For launching URLs
-import '../services/ai_service.dart';
-import '../widgets/result_dialog.dart';
-
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
+
+import '../services/ai_service.dart';
+import '../services/text_storage_service.dart';
+import '../services/usage_service.dart';
+import '../widgets/result_dialog.dart';
+
+
 
 class HomeScreen extends HookWidget {
   const HomeScreen({super.key});
@@ -17,6 +21,16 @@ class HomeScreen extends HookWidget {
   Widget build(BuildContext context) {
     final isProcessing = useState(false);
     final history = useState<List<Map<String, String>>>([]);
+    final hex = useState<String>(''); // Initially set to null
+
+    // 🧠 Automatically call getOrCreateHex when page loads
+    useEffect(() {
+      Future.microtask(() async {
+        final result = await getOrCreateHex();
+        hex.value = result;
+      });
+      return null;
+    }, []);
 
     final supportedLanguages = {
       'English': TextRecognitionScript.latin,
@@ -133,6 +147,9 @@ class HomeScreen extends HookWidget {
 
         // Call AI processing with image file
         final aiResult = await AIService.processImageWithAI(file, selectedLanguageName.value);
+        if(hex.value != ''){
+          ClickService.incrementUsage(hex.value); // Call the function
+        }
 
         // Store and show the result
         history.value = [
@@ -169,6 +186,9 @@ class HomeScreen extends HookWidget {
         final file = File(image.path);
 
         final aiResult = await AIService.processImageWithAI(file,selectedLanguageName.value);
+        if(hex.value != ''){
+          ClickService.incrementUsage(hex.value); // Call the function
+        }
 
         history.value = [
           {'text': 'Image sent to AI', 'analysis': aiResult},
