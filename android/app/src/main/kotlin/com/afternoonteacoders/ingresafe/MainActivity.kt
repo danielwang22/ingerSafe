@@ -1,4 +1,4 @@
-package com.example.photo_text_ai
+package com.afternoonteacoders.ingresafe
 
 import io.flutter.embedding.android.FlutterActivity
 

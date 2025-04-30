@@ -1,12 +1,15 @@
 plugins {
     id "com.android.application"
+    // START: FlutterFire Configuration
+    id 'com.google.gms.google-services'
+    // END: FlutterFire Configuration
     id "kotlin-android"
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id "dev.flutter.flutter-gradle-plugin"
 }
 
 android {
-    namespace = "com.example.photo_text_ai"
+    namespace = "com.afternoonteacoders.ingresafe"
     compileSdk = 35
     ndkVersion = "26.1.10909125"
 
@@ -20,7 +23,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.photo_text_ai"
+        applicationId = "com.afternoonteacoders.ingresafe"
         minSdk = 24
         targetSdk = 35
         versionCode = 1
