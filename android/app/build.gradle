@@ -41,7 +41,7 @@ android {
 
     buildTypes {
         release {
-            isDebuggable = false
+            isDebuggable false
 //            signingConfig signingConfigs.debug
             signingConfig signingConfigs.release // ← This line changed
             minifyEnabled true
@@ -50,7 +50,7 @@ android {
 
         }
         debug {
-            isDebuggable = true
+            isDebuggable true
             buildConfigField "Boolean", "ENABLE_R8", "true"
         }
     }
