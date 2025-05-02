@@ -30,14 +30,27 @@ android {
         versionName = "1.0"
     }
 
+    signingConfigs {
+        release {
+            storeFile file("keystore/ingresafe-release-key.jks")
+            storePassword "afternoonteacoders"
+            keyAlias "ingresafe"
+            keyPassword "afternoonteacoders"
+        }
+    }
+
     buildTypes {
         release {
-            signingConfig signingConfigs.debug
+            isDebuggable = false
+//            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.release // ← This line changed
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
         }
         debug {
+            isDebuggable = true
             buildConfigField "Boolean", "ENABLE_R8", "true"
         }
     }
