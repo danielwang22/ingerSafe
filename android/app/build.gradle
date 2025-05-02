@@ -48,6 +48,10 @@ android {
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 
+            // 👇 Add this to generate native debug symbols
+            ndk {
+                debugSymbolLevel = 'FULL'
+            }
         }
         debug {
             debuggable true
