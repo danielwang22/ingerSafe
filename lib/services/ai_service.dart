@@ -3,7 +3,15 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
+class AIImageAnalysisResult {
+  final bool status;
+  final String result;
+
+  AIImageAnalysisResult({required this.status, required this.result});
+}
+
 class AIService {
+
   static Future<String> processWithAI(String text, selectedlanguage) async {
     if (text.trim().isEmpty) {
       return '未檢測到可分析的文字內容';
@@ -48,7 +56,7 @@ class AIService {
     }
   }
 
-  static Future<String> processImageWithAI(File imageFile, String targetLanguage) async {
+  static Future<AIImageAnalysisResult> processImageWithAI(File imageFile, String targetLanguage) async {
     final imageBytes = await imageFile.readAsBytes();
     final base64Image = base64Encode(imageBytes);
 
@@ -93,12 +101,21 @@ class AIService {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(utf8.decode(response.bodyBytes));
-        return data['choices'][0]['message']['content'];
+        return AIImageAnalysisResult(
+          status: true,
+          result: data['choices'][0]['message']['content'],
+        );
       } else {
-        return '圖片分析 API 失敗（錯誤代碼 ${response.statusCode}）';
+        return AIImageAnalysisResult(
+          status: false,
+          result: '圖片分析 API 失敗',
+        );
       }
     } catch (e) {
-      return '圖片分析時發生錯誤：$e';
+      return AIImageAnalysisResult(
+        status: false,
+        result: '圖片分析時發生錯誤',
+      );
     }
   }
 }

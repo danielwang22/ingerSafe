@@ -147,13 +147,13 @@ class HomeScreen extends HookWidget {
 
         // Call AI processing with image file
         final aiResult = await AIService.processImageWithAI(file, selectedLanguageName.value);
-        if(hex.value != ''){
+        if(hex.value != '' && aiResult.status == true){
           ClickService.incrementUsage(hex.value); // Call the function
         }
 
         // Store and show the result
         history.value = [
-          {'text': t['aiResult']!, 'analysis': aiResult},
+          {'text': t['aiResult']!, 'analysis': aiResult.result},
           ...history.value,
         ];
 
@@ -162,7 +162,7 @@ class HomeScreen extends HookWidget {
             context: context,
             builder: (context) => ResultDialog(
               originalText: 'Asset image analyzed by AI',
-              analysis: aiResult,
+              analysis: aiResult.result,
               selectedLanguageName: langCode,
             ),
           );
@@ -186,12 +186,12 @@ class HomeScreen extends HookWidget {
         final file = File(image.path);
 
         final aiResult = await AIService.processImageWithAI(file,selectedLanguageName.value);
-        if(hex.value != ''){
+        if(hex.value != '' && aiResult.status == true){
           ClickService.incrementUsage(hex.value); // Call the function
         }
 
         history.value = [
-          {'text': 'Image sent to AI', 'analysis': aiResult},
+          {'text': 'Image sent to AI', 'analysis': aiResult.result},
           ...history.value,
         ];
 
@@ -200,7 +200,7 @@ class HomeScreen extends HookWidget {
             context: context,
             builder: (context) => ResultDialog(
               originalText: 'Image content analyzed by AI',
-              analysis: aiResult,
+              analysis: aiResult.result,
               selectedLanguageName: langCode,
             ),
           );
@@ -445,10 +445,10 @@ class HomeScreen extends HookWidget {
                                       final url = Uri.parse('https://buymeacoffee.com/ingresafe');
                                       try {
                                         if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
-                                          print('Could not launch $url');
+                                          // print('Could not launch $url');
                                         }
                                       } catch (e) {
-                                        print('Error launching URL: $e');
+                                        // print('Error launching URL: $e');
                                       }
                                     },
                                 ),

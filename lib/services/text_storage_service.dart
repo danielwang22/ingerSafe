@@ -18,7 +18,7 @@ Future<String?> getHexFromFile() async {
       return await file.readAsString();
     }
   } catch (e) {
-    print('Error reading file: $e');
+    // print('Error reading file: $e');
   }
   return null;
 }
@@ -29,7 +29,7 @@ Future<void> saveHexToFile(String hex) async {
     final file = File('${directory.path}/hex_string.txt');
     await file.writeAsString(hex);
   } catch (e) {
-    print('Error writing to file: $e');
+    // print('Error writing to file: $e');
   }
 }
 
