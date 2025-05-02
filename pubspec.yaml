@@ -25,6 +25,8 @@ dependencies:
   firebase_core: ^3.13.0
   firebase_auth: ^5.5.0 # if needed
   cloud_firestore: ^5.6.7  # or latest
+  flutter_launcher_icons: ^0.14.3
+  connectivity_plus: ^5.0.2
 
 dev_dependencies:
   flutter_test:

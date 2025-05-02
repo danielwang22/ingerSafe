@@ -6,13 +6,17 @@ import 'package:flutter/gestures.dart'; // For TapGestureRecognizer
 import 'package:url_launcher/url_launcher.dart'; // For launching URLs
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 
 import '../services/ai_service.dart';
 import '../services/text_storage_service.dart';
 import '../services/usage_service.dart';
 import '../widgets/result_dialog.dart';
 
-
+Future<bool> isConnected() async {
+  final connectivityResult = await Connectivity().checkConnectivity();
+  return connectivityResult != ConnectivityResult.none;
+}
 
 class HomeScreen extends HookWidget {
   const HomeScreen({super.key});
@@ -136,6 +140,15 @@ class HomeScreen extends HookWidget {
     final t = languageTexts[selectedLanguageName.value]!;
 
     Future<void> processAssetImage(String assetPath) async {
+      if (!await isConnected()) {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("No internet connection. Please try again later.")),
+          );
+        }
+        return;
+      }
+
       try {
         isProcessing.value = true;
 
@@ -179,6 +192,17 @@ class HomeScreen extends HookWidget {
     }
 
     Future<void> processImage(XFile? image) async {
+      if (image == null) return;
+
+      if (!await isConnected()) {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("No internet connection. Please try again later.")),
+          );
+        }
+        return;
+      }
+
       if (image == null) return;
 
       try {
