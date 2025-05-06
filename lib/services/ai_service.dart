@@ -1,40 +1,83 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
+class AIImageAnalysisResult {
+  final bool status;
+  final String result;
+
+  AIImageAnalysisResult({required this.status, required this.result});
+}
+
 class AIService {
-  static Future<String> processWithAI(String text) async {
-    if (text.trim().isEmpty) {
-      return '未檢測到可分析的文字內容';
-    }
+
+  static Future<AIImageAnalysisResult> processImageWithAI(File imageFile, String targetLanguage) async {
+    final imageBytes = await imageFile.readAsBytes();
+    final base64Image = base64Encode(imageBytes);
 
     try {
       final response = await http.post(
-        Uri.parse('https://api.deepseek.com/v1/chat/completions'),
+        Uri.parse('https://api.openai.com/v1/chat/completions'),
+
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer ${dotenv.env['DEEPSEEK_API_KEY']}',
-          'Accept': 'application/vnd.deepseek.v1+json'
+          'Authorization': 'Bearer ${dotenv.env['OPENAI_API_KEY']}',
         },
         body: jsonEncode({
-          'model': 'deepseek-chat',
-          'messages': [
-            {'role': 'system', 'content': '你是一個擅長分析圖片文字內容的助理，請用繁體中文提供專業分析'},
-            {'role': 'user', 'content': '這是從圖片中提取的文字，請分析並提供見解：\n\n$text'}
+          // "model": "gpt-4.1",
+          "model": "gpt-4.1-mini",
+          "messages": [
+            {
+              // "role": "system",
+              // "content": "你是一位專業的健康分析助理。請以繁體中文分析圖片中任何可辨識的成分名稱或物質，說明它們對孕婦或哺乳期女性可能造成的負面影響。即使圖片不完整，也請儘可能從中擷取資訊進行分析。\n\n請使用以下格式輸出每一項分析：\n\n物質名稱 - 簡短的專業說明，指出它可能的影響。\n\n請使用條列式呈現，簡潔明瞭、易於理解。請勿提供任何危險、不安全或未經驗證的建議。"
+              "role": "system",
+              "content": """
+              You are a professional health analysis assistant. Please analyze any recognizable ingredients or substances found in the image, and explain their potential negative effects on pregnant or breastfeeding women. If the image contains partial or unclear text, do your best to extract useful information.
+              
+              First, state whether the product appears dangerous overall.
+              
+              List any **dangerous or high-risk substances first**, followed by substances with **minor or low-level concerns**.
+              
+              Return results as a bullet list, using this format:
+              - **Substance** – Short explanation of its potential effects.
+              
+              Respond in ${targetLanguage}. Do not invent information that is not visible or recognizable in the image. Do not give dangerous or unverified advice.
+              """
+            },
+            {
+              "role": "user",
+              "content": [
+                {
+                  "type": "image_url",
+                  "image_url": {
+                    "url": "data:image/jpeg;base64,$base64Image"
+                  }
+                }
+              ]
+            }
           ],
-          'temperature': 0.7,
-          'max_tokens': 1000
+          "max_tokens": 1000
         }),
       );
 
       if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        return data['choices'][0]['message']['content'];
+        final data = jsonDecode(utf8.decode(response.bodyBytes));
+        return AIImageAnalysisResult(
+          status: true,
+          result: data['choices'][0]['message']['content'],
+        );
       } else {
-        return 'API 請求失敗 (錯誤代碼 ${response.statusCode})';
+        return AIImageAnalysisResult(
+          status: false,
+          result: '圖片分析 API 失敗',
+        );
       }
     } catch (e) {
-      return '發生連線錯誤：$e';
+      return AIImageAnalysisResult(
+        status: false,
+        result: '圖片分析時發生錯誤',
+      );
     }
   }
 }

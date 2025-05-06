@@ -10,11 +10,23 @@
 -   支援深色/淺色主題切換
 -   完整的歷史記錄功能
 
+## Xcode 環境
+
+-   Xcode iOS 18.0 或更高版本
+
+## Android Studio 環境
+
+-   Android SDK Platform 35.0.0
+-   Android SDK Platform-Tools 35.0.0
+-   Android SDK Build-Tools 34.0.0
+-   Android SDK Command-line Tools (latest)
+
 ## 系統需求
 
 -   Flutter SDK 3.0 或更高版本
 -   iOS 11.0+ / Android 5.0+
 -   OpenAI API 金鑰
+-   DeepSeek API 金鑰
 
 ## 安裝步驟
 
