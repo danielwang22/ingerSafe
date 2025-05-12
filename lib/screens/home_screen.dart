@@ -10,6 +10,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 
 import '../services/ai_service.dart';
 import '../services/text_storage_service.dart';
+import '../services/history_storage_service.dart';
 import '../services/usage_service.dart';
 import '../widgets/result_dialog.dart';
 
@@ -32,6 +33,9 @@ class HomeScreen extends HookWidget {
       Future.microtask(() async {
         final result = await getOrCreateHex();
         hex.value = result;
+
+        final storedHistory = await HistoryStorageService.loadHistory();
+        history.value = storedHistory;
       });
       return null;
     }, []);
@@ -139,57 +143,58 @@ class HomeScreen extends HookWidget {
 
     final t = languageTexts[selectedLanguageName.value]!;
 
-    // Future<void> processAssetImage(String assetPath) async {
-    //   if (!await isConnected()) {
-    //     if (context.mounted) {
-    //       ScaffoldMessenger.of(context).showSnackBar(
-    //         SnackBar(content: Text("No internet connection. Please try again later.")),
-    //       );
-    //     }
-    //     return;
-    //   }
-    //
-    //   try {
-    //     isProcessing.value = true;
-    //
-    //     // Load image from assets and write to a temporary file
-    //     final byteData = await DefaultAssetBundle.of(context).load(assetPath);
-    //     final tempDir = await getTemporaryDirectory();
-    //     final file = File('${tempDir.path}/temp_asset.jpg');
-    //     await file.writeAsBytes(byteData.buffer.asUint8List());
-    //
-    //     // Call AI processing with image file
-    //     final aiResult = await AIService.processImageWithAI(file, selectedLanguageName.value);
-    //     if(hex.value != '' && aiResult.status == true){
-    //       ClickService.incrementUsage(hex.value); // Call the function
-    //     }
-    //
-    //     // Store and show the result
-    //     history.value = [
-    //       {'text': t['aiResult']!, 'analysis': aiResult.result},
-    //       ...history.value,
-    //     ];
-    //
-    //     if (context.mounted) {
-    //       showDialog(
-    //         context: context,
-    //         builder: (context) => ResultDialog(
-    //           originalText: 'Asset image analyzed by AI',
-    //           analysis: aiResult.result,
-    //           selectedLanguageName: langCode,
-    //         ),
-    //       );
-    //     }
-    //   } catch (e) {
-    //     if (context.mounted) {
-    //       ScaffoldMessenger.of(context).showSnackBar(
-    //         SnackBar(content: Text(e.toString())),
-    //       );
-    //     }
-    //   } finally {
-    //     isProcessing.value = false;
-    //   }
-    // }
+    Future<void> processAssetImage(String assetPath) async {
+      if (!await isConnected()) {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("No internet connection. Please try again later.")),
+          );
+        }
+        return;
+      }
+
+      try {
+        isProcessing.value = true;
+
+        // Load image from assets and write to a temporary file
+        final byteData = await DefaultAssetBundle.of(context).load(assetPath);
+        final tempDir = await getTemporaryDirectory();
+        final file = File('${tempDir.path}/temp_asset.jpg');
+        await file.writeAsBytes(byteData.buffer.asUint8List());
+
+        // Call AI processing with image file
+        final aiResult = await AIService.processImageWithAI(file, selectedLanguageName.value);
+        if(hex.value != '' && aiResult.status == true){
+          ClickService.incrementUsage(hex.value); // Call the function
+        }
+
+        // Store and show the result
+        history.value = [
+          {'text': t['aiResult']!, 'analysis': aiResult.result},
+          ...history.value,
+        ];
+        await HistoryStorageService.saveHistory(history.value);
+
+        if (context.mounted) {
+          showDialog(
+            context: context,
+            builder: (context) => ResultDialog(
+              originalText: 'Asset image analyzed by AI',
+              analysis: aiResult.result,
+              selectedLanguageName: langCode,
+            ),
+          );
+        }
+      } catch (e) {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(e.toString())),
+          );
+        }
+      } finally {
+        isProcessing.value = false;
+      }
+    }
 
     Future<void> processImage(XFile? image) async {
       if (image == null) return;
@@ -218,6 +223,7 @@ class HomeScreen extends HookWidget {
           {'text': 'Image sent to AI', 'analysis': aiResult.result},
           ...history.value,
         ];
+        await HistoryStorageService.saveHistory(history.value);
 
         if (context.mounted) {
           showDialog(
@@ -394,14 +400,14 @@ class HomeScreen extends HookWidget {
             tooltip: t['chooseFromGallery'],
             child: const Icon(Icons.photo_library),
           ),
-          // const SizedBox(width: 16),
-          // FloatingActionButton(
-          //   onPressed: isProcessing.value
-          //       ? null
-          //       : () => processAssetImage('assets/images/wipes.jpg'),
-          //   tooltip: t['useTestImage'],
-          //   child: const Icon(Icons.image),
-          // ),
+          const SizedBox(width: 16),
+          FloatingActionButton(
+            onPressed: isProcessing.value
+                ? null
+                : () => processAssetImage('assets/images/wipes.jpg'),
+            tooltip: t['useTestImage'],
+            child: const Icon(Icons.image),
+          ),
           const SizedBox(width: 16),
           FloatingActionButton(
             heroTag: 'aboutUsBtn',
