@@ -54,10 +54,7 @@ class HomeScreen extends HookWidget {
                 _galleryKey.currentContext != null &&
                 _aboutUsKey.currentContext != null;
 
-            // debugPrint('🔄 Showcase attempt $attempts: ready? $allReady');
-
             if (context.mounted && allReady) {
-              // debugPrint('✅ Starting Showcase');
               ShowCaseWidget.of(context).startShowCase([
                 _cameraKey,
                 _galleryKey,
@@ -70,42 +67,11 @@ class HomeScreen extends HookWidget {
             await Future.delayed(delay);
             attempts++;
           }
-
-          if (attempts == maxAttempts) {
-            // debugPrint('❌ Showcase targets never became ready');
-          }
         }
       });
 
       return null;
     }, []);
-
-    // Show the Showcase when the widget is built
-    // useEffect(() {
-    //   Future.microtask(() async {
-    //     final prefs = await SharedPreferences.getInstance();
-    //     final shown = prefs.getBool('hasShownShowcase') ?? false;
-    //
-    //     if (!shown && context.mounted) {
-    //       await Future.delayed(const Duration(milliseconds: 300));
-    //       ShowCaseWidget.of(context).startShowCase([
-    //         _cameraKey,
-    //         _galleryKey,
-    //         _aboutUsKey,
-    //       ]);
-    //       await prefs.setBool('hasShownShowcase', true);
-    //     }
-    //   });
-    //   return null;
-    // }, []);
-
-    // useEffect(() {
-    //   Future.microtask(() async {
-    //
-    //   });
-    //
-    //   return null;
-    // }, []);
 
     final supportedLanguages = {
       'English': TextRecognitionScript.latin,
@@ -510,7 +476,6 @@ class HomeScreen extends HookWidget {
           //   onPressed: () async {
           //     final prefs = await SharedPreferences.getInstance();
           //     await prefs.remove('hasShownTutorial'); // 🔁 This resets the flag
-          //     // debugPrint('🧹 Showcase flag cleared. Restart app to test.');
           //   },
           //   child: Text("Reset Tutorial"),
           // ),
