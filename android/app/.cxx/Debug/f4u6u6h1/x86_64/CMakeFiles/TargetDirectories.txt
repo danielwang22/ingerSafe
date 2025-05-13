@@ -1,2 +1,0 @@
-/Users/kalzheng/Desktop/flutter/projects/AI-PHOTO-DETECTOR/android/app/.cxx/Debug/f4u6u6h1/x86_64/CMakeFiles/edit_cache.dir
-/Users/kalzheng/Desktop/flutter/projects/AI-PHOTO-DETECTOR/android/app/.cxx/Debug/f4u6u6h1/x86_64/CMakeFiles/rebuild_cache.dir
