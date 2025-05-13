@@ -11,15 +11,14 @@ class AIImageAnalysisResult {
 }
 
 class AIService {
-
-  static Future<AIImageAnalysisResult> processImageWithAI(File imageFile, String targetLanguage) async {
+  static Future<AIImageAnalysisResult> processImageWithAI(
+      File imageFile, String targetLanguage) async {
     final imageBytes = await imageFile.readAsBytes();
     final base64Image = base64Encode(imageBytes);
 
     try {
       final response = await http.post(
         Uri.parse('https://api.openai.com/v1/chat/completions'),
-
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer ${dotenv.env['OPENAI_API_KEY']}',
@@ -42,7 +41,7 @@ class AIService {
               Return results as a bullet list, using this format:
               - **Substance** – Short explanation of its potential effects.
               
-              Respond in ${targetLanguage}. Do not invent information that is not visible or recognizable in the image. Do not give dangerous or unverified advice.
+              Respond in $targetLanguage. Do not invent information that is not visible or recognizable in the image. Do not give dangerous or unverified advice.
               """
             },
             {
@@ -50,9 +49,7 @@ class AIService {
               "content": [
                 {
                   "type": "image_url",
-                  "image_url": {
-                    "url": "data:image/jpeg;base64,$base64Image"
-                  }
+                  "image_url": {"url": "data:image/jpeg;base64,$base64Image"}
                 }
               ]
             }
@@ -65,7 +62,7 @@ class AIService {
         final data = jsonDecode(utf8.decode(response.bodyBytes));
         return AIImageAnalysisResult(
           status: true,
-          result: data['choices'][0]['message']['content'],
+          result: data['choices'][0]['message']['content'].replaceAll('**', ''),
         );
       } else {
         return AIImageAnalysisResult(
