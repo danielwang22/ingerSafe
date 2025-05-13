@@ -1,12 +1,14 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
-import 'package:flutter/gestures.dart'; // For TapGestureRecognizer
-import 'package:url_launcher/url_launcher.dart'; // For launching URLs
 import 'dart:io';
+import 'package:flutter/material.dart';
+import 'package:flutter/gestures.dart'; // For TapGestureRecognizer
+import 'package:showcaseview/showcaseview.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:url_launcher/url_launcher.dart'; // For launching URLs
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 
 import '../services/ai_service.dart';
 import '../services/text_storage_service.dart';
@@ -26,15 +28,84 @@ class HomeScreen extends HookWidget {
     final isProcessing = useState(false);
     final history = useState<List<Map<String, String>>>([]);
     final hex = useState<String>(''); // Initially set to null
+    // final GlobalKey _cameraKey = GlobalKey();
+    // final GlobalKey _galleryKey = GlobalKey();
+    // final GlobalKey _aboutUsKey = GlobalKey();
+    final _cameraKey = useMemoized(() => GlobalKey(), []);
+    final _galleryKey = useMemoized(() => GlobalKey(), []);
+    final _aboutUsKey = useMemoized(() => GlobalKey(), []);
 
     // 🧠 Automatically call getOrCreateHex when page loads
     useEffect(() {
-      Future.microtask(() async {
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
         final result = await getOrCreateHex();
         hex.value = result;
+
+        final prefs = await SharedPreferences.getInstance();
+        final hasShownTutorial = prefs.getBool('hasShownTutorial') ?? false;
+
+        if (!hasShownTutorial) {
+          int attempts = 0;
+          const maxAttempts = 10;
+          const delay = Duration(milliseconds: 300);
+
+          while (attempts < maxAttempts) {
+            final allReady = _cameraKey.currentContext != null &&
+                _galleryKey.currentContext != null &&
+                _aboutUsKey.currentContext != null;
+
+            // debugPrint('🔄 Showcase attempt $attempts: ready? $allReady');
+
+            if (context.mounted && allReady) {
+              // debugPrint('✅ Starting Showcase');
+              ShowCaseWidget.of(context).startShowCase([
+                _cameraKey,
+                _galleryKey,
+                _aboutUsKey,
+              ]);
+              await prefs.setBool('hasShownTutorial', true);
+              break;
+            }
+
+            await Future.delayed(delay);
+            attempts++;
+          }
+
+          if (attempts == maxAttempts) {
+            // debugPrint('❌ Showcase targets never became ready');
+          }
+        }
       });
+
       return null;
     }, []);
+
+    // Show the Showcase when the widget is built
+    // useEffect(() {
+    //   Future.microtask(() async {
+    //     final prefs = await SharedPreferences.getInstance();
+    //     final shown = prefs.getBool('hasShownShowcase') ?? false;
+    //
+    //     if (!shown && context.mounted) {
+    //       await Future.delayed(const Duration(milliseconds: 300));
+    //       ShowCaseWidget.of(context).startShowCase([
+    //         _cameraKey,
+    //         _galleryKey,
+    //         _aboutUsKey,
+    //       ]);
+    //       await prefs.setBool('hasShownShowcase', true);
+    //     }
+    //   });
+    //   return null;
+    // }, []);
+
+    // useEffect(() {
+    //   Future.microtask(() async {
+    //
+    //   });
+    //
+    //   return null;
+    // }, []);
 
     final supportedLanguages = {
       'English': TextRecognitionScript.latin,
@@ -58,6 +129,9 @@ class HomeScreen extends HookWidget {
         'aiResult': "Ai Result",
         'aboutUsHeading': 'About Us',
         'aboutUsMessage': 'IngreSafe helps analyze product ingredients to ensure safety for pregnant or breastfeeding women. We do not collect any of your information. All information is store in your local device. If you want support us we have a Buymeacoffee. Any support will be greatly appreciate and will push us to create more useful product.',
+        'cameraTip': 'Take a photo and analyze the ingredient list.',
+        'galleryTip': 'Choose an image from the gallery and then analyze the ingredient list.',
+        'aboutUsTip': 'About Us',
       },
       'Chinese': {
         'currentLanguage': '目前語言',
@@ -71,6 +145,9 @@ class HomeScreen extends HookWidget {
         'aiResult': "AI 結果",
         'aboutUsHeading': '關於我們',
         'aboutUsMessage': 'IngreSafe 協助分析產品成分，確保對孕婦或哺乳期女性的安全。我們不會收集您的任何資訊，所有資料都儲存在您的本地設備上。如果您願意支持我們，我們有 Buy Me a Coffee 頁面。您的支持將讓我們非常感激，並激勵我們開發更多實用的產品。',
+        'cameraTip': '請拍一張照片，並分析成分列表。',
+        'galleryTip': '請從圖庫選擇一張圖片，然後分析成分列表。',
+        'aboutUsTip': '關於我們',
       },
       'Japanese': {
         'currentLanguage': '現在の言語',
@@ -84,6 +161,9 @@ class HomeScreen extends HookWidget {
         'aiResult': "AI結果",
         'aboutUsHeading': '私たちについて',
         'aboutUsMessage': 'IngreSafeは、妊婦や授乳中の女性にとって安全な製品成分の分析をサポートします。私たちはあなたの情報を収集することはありません。すべてのデータはあなたのローカルデバイスに保存されます。もし私たちをサポートしたい場合は、Buy Me a Coffeeページがあります。どんなサポートも大変感謝しており、それが私たちにとって新しい有用な製品を作り続ける力となります。',
+        'cameraTip': '写真を撮って、成分リストを分析してください。',
+        'galleryTip': 'ギャラリーから画像を選んで、成分リストを分析してください。',
+        'aboutUsTip': '私たちについて',
       },
       'Korean': {
         'currentLanguage': '현재 언어',
@@ -97,6 +177,9 @@ class HomeScreen extends HookWidget {
         'aiResult': "AI 결과",
         'aboutUsHeading': '우리에 대해',
         'aboutUsMessage': 'IngreSafe는 임산부와 수유부를 위한 제품 성분의 안전성을 분석하는 데 도움을 줍니다. 저희는 어떠한 정보도 수집하지 않으며, 모든 데이터는 사용자의 로컬 기기에 저장됩니다. 저희를 응원하고 싶다면 Buy Me a Coffee 페이지를 통해 지원해주실 수 있습니다. 여러분의 소중한 지원은 저희에게 큰 힘이 되며, 더 유용한 제품을 만드는 데 도움이 됩니다.',
+        'cameraTip': '사진을 찍고 성분 목록을 분석해 주세요.',
+        'galleryTip': '갤러리에서 이미지를 선택한 후 성분 목록을 분석해 주세요.',
+        'aboutUsTip': '우리에 대해',
       },
     };
 
@@ -351,142 +434,177 @@ class HomeScreen extends HookWidget {
       floatingActionButton: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          FloatingActionButton(
-            onPressed: isProcessing.value
-                ? null
-                : () async {
-              try {
-                final image = await ImagePicker().pickImage(source: ImageSource.camera);
-                await processImage(image);
-              } catch (e) {
-                if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(t['cameraError']!),
-                      duration: const Duration(seconds: 2),
-                    ),
-                  );
+          Showcase(
+            key: _cameraKey,
+            // title: t['cameraTip'],
+            description: t['cameraTip'],
+            child: FloatingActionButton(
+              onPressed: isProcessing.value
+                  ? null
+                  : () async {
+                try {
+                  final image = await ImagePicker().pickImage(source: ImageSource.camera);
+                  await processImage(image);
+                } catch (e) {
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(t['cameraError']!),
+                        duration: const Duration(seconds: 2),
+                      ),
+                    );
+                  }
                 }
-              }
-            },
-            tooltip: t['takePhoto'],
-            child: const Icon(Icons.camera_alt),
+              },
+              tooltip: t['takePhoto'],
+              child: const Icon(Icons.camera_alt),
+            ),
           ),
           const SizedBox(width: 16),
-          FloatingActionButton(
-            onPressed: isProcessing.value
-                ? null
-                : () async {
-              try {
-                final image = await ImagePicker().pickImage(source: ImageSource.gallery);
-                await processImage(image);
-              } catch (e) {
-                if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(t['galleryError']!),
-                      duration: const Duration(seconds: 2),
-                    ),
-                  );
-                }
-              }
-            },
-            tooltip: t['chooseFromGallery'],
-            child: const Icon(Icons.photo_library),
-          ),
-          const SizedBox(width: 16),
-          FloatingActionButton(
-            onPressed: isProcessing.value
-                ? null
-                : () => processAssetImage('assets/images/wipes.jpg'),
-            tooltip: t['useTestImage'],
-            child: const Icon(Icons.image),
-          ),
-          const SizedBox(width: 16),
-          FloatingActionButton(
-            heroTag: 'aboutUsBtn',
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (context) => AlertDialog(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  elevation: 24,
-                  insetPadding: EdgeInsets.symmetric(horizontal: 40, vertical: 24),
-                  titlePadding: EdgeInsets.fromLTRB(24, 24, 8, 0),
-                  contentPadding: EdgeInsets.fromLTRB(24, 20, 24, 24),
-                  title: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: Text(
-                          t['aboutUsHeading']!,
-                          style: TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
-                            color: Theme.of(context).colorScheme.primary,
-                          ),
+          Showcase(
+            key: _galleryKey,
+            // title: t['galleryTip'],
+            description: t['galleryTip'],
+            child: FloatingActionButton(
+                onPressed: isProcessing.value
+                    ? null
+                    : () async {
+                  try {
+                    final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+                    await processImage(image);
+                  } catch (e) {
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(t['galleryError']!),
+                          duration: const Duration(seconds: 2),
                         ),
+                      );
+                    }
+                  }
+                },
+                tooltip: t['chooseFromGallery'],
+                child: const Icon(Icons.photo_library),
+              ),
+          ),
+          const SizedBox(width: 16),
+          //test button start
+          // FloatingActionButton(
+          //   onPressed: isProcessing.value
+          //       ? null
+          //       : () => processAssetImage('assets/images/wipes.jpg'),
+          //   tooltip: t['useTestImage'],
+          //   child: const Icon(Icons.image),
+          // ),
+          // FloatingActionButton(
+          //   child: Text("Start Tutorial"),
+          //   onPressed: () {
+          //     ShowCaseWidget.of(context).startShowCase([
+          //       _cameraKey,
+          //       _galleryKey,
+          //       _aboutUsKey,
+          //     ]);
+          //   },
+          // ),
+          // FloatingActionButton(
+          //   onPressed: () async {
+          //     final prefs = await SharedPreferences.getInstance();
+          //     await prefs.remove('hasShownTutorial'); // 🔁 This resets the flag
+          //     // debugPrint('🧹 Showcase flag cleared. Restart app to test.');
+          //   },
+          //   child: Text("Reset Tutorial"),
+          // ),
+          //test button end
+          // const SizedBox(width: 16),
+          Showcase(
+            key: _aboutUsKey,
+            // title: t['aboutUsTip'],
+            description: t['aboutUsTip'],
+            child: FloatingActionButton(
+                heroTag: 'aboutUsBtn',
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
                       ),
-                      IconButton(
-                        icon: Icon(Icons.close, size: 28),
-                        tooltip: 'Close',
-                        onPressed: () => Navigator.of(context).pop(),
-                        splashRadius: 24,
-                      ),
-                    ],
-                  ),
-                  content: SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.3,
-                    width: MediaQuery.of(context).size.width * 0.8,
-                    child: SingleChildScrollView(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      elevation: 24,
+                      insetPadding: EdgeInsets.symmetric(horizontal: 40, vertical: 24),
+                      titlePadding: EdgeInsets.fromLTRB(24, 24, 8, 0),
+                      contentPadding: EdgeInsets.fromLTRB(24, 20, 24, 24),
+                      title: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            t['aboutUsMessage']!,
-                            style: TextStyle(
-                              fontSize: 16,
-                              height: 1.4,
+                          Expanded(
+                            child: Text(
+                              t['aboutUsHeading']!,
+                              style: TextStyle(
+                                fontSize: 22,
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
                             ),
                           ),
-                          const SizedBox(height: 16),
-                          RichText(
-                            text: TextSpan(
-                              children: [
-                                TextSpan(
-                                  text: 'Buy me a coffee',
-                                  style: TextStyle(
-                                    color: Colors.blueAccent,
-                                    decoration: TextDecoration.underline,
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 16,
-                                  ),
-                                  recognizer: TapGestureRecognizer()
-                                    ..onTap = () async {
-                                      final url = Uri.parse('https://buymeacoffee.com/ingresafe');
-                                      try {
-                                        if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
-                                          // print('Could not launch $url');
-                                        }
-                                      } catch (e) {
-                                        // print('Error launching URL: $e');
-                                      }
-                                    },
-                                ),
-                              ],
-                            ),
+                          IconButton(
+                            icon: Icon(Icons.close, size: 28),
+                            tooltip: 'Close',
+                            onPressed: () => Navigator.of(context).pop(),
+                            splashRadius: 24,
                           ),
                         ],
                       ),
+                      content: SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.3,
+                        width: MediaQuery.of(context).size.width * 0.8,
+                        child: SingleChildScrollView(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                t['aboutUsMessage']!,
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  height: 1.4,
+                                ),
+                              ),
+                              const SizedBox(height: 16),
+                              RichText(
+                                text: TextSpan(
+                                  children: [
+                                    TextSpan(
+                                      text: 'Buy me a coffee',
+                                      style: TextStyle(
+                                        color: Colors.blueAccent,
+                                        decoration: TextDecoration.underline,
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 16,
+                                      ),
+                                      recognizer: TapGestureRecognizer()
+                                        ..onTap = () async {
+                                          final url = Uri.parse('https://buymeacoffee.com/ingresafe');
+                                          try {
+                                            if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+                                              // print('Could not launch $url');
+                                            }
+                                          } catch (e) {
+                                            // print('Error launching URL: $e');
+                                          }
+                                        },
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-              );
-            },
-            tooltip: 'About Us',
-            child: const Icon(Icons.info_outline),
+                  );
+                },
+                tooltip: 'About Us',
+                child: const Icon(Icons.info_outline),
+              ),
           ),
         ],
       ),
