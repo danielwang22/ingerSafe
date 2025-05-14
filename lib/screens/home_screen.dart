@@ -75,31 +75,36 @@ class HomeScreen extends HookWidget {
 
     final supportedLanguages = {
       'English': TextRecognitionScript.latin,
-      'Chinese': TextRecognitionScript.chinese,
+      'Traditional_Chinese': TextRecognitionScript.chinese,
       'Japanese': TextRecognitionScript.japanese,
       'Korean': TextRecognitionScript.korean,
     };
-    final selectedLanguage = useState<TextRecognitionScript>(TextRecognitionScript.chinese);
-    final selectedLanguageName = useState<String>('Chinese');
+    final selectedLanguage =
+        useState<TextRecognitionScript>(TextRecognitionScript.chinese);
+    final selectedLanguageName = useState<String>('Traditional_Chinese');
 
     final languageTexts = {
       'English': {
         'currentLanguage': 'Current Language',
         'noHistory': 'No history yet. Take a photo to get started!',
-        'cameraError': 'Camera not supported or unavailable. Try selecting from gallery.',
+        'cameraError':
+            'Camera not supported or unavailable. Try selecting from gallery.',
         'galleryError': 'Unable to access gallery. Please try again later.',
-        'webUnsupported': 'Text recognition is not supported on the web. Please use the mobile app.',
+        'webUnsupported':
+            'Text recognition is not supported on the web. Please use the mobile app.',
         'takePhoto': 'Take Photo',
         'chooseFromGallery': 'Choose from Gallery',
         'useTestImage': 'Use Test Image',
         'aiResult': "Ai Result",
         'aboutUsHeading': 'About Us',
-        'aboutUsMessage': 'IngreSafe helps analyze product ingredients to ensure safety for pregnant or breastfeeding women. We do not collect any of your information. All information is store in your local device. If you want support us we have a Buymeacoffee. Any support will be greatly appreciate and will push us to create more useful product.',
+        'aboutUsMessage':
+            'IngreSafe helps analyze product ingredients to ensure safety for pregnant or breastfeeding women. We do not collect any of your information. All information is store in your local device. If you want support us we have a Buymeacoffee. Any support will be greatly appreciate and will push us to create more useful product.',
         'cameraTip': 'Take a photo and analyze the ingredient list.',
-        'galleryTip': 'Choose an image from the gallery and then analyze the ingredient list.',
+        'galleryTip':
+            'Choose an image from the gallery and then analyze the ingredient list.',
         'aboutUsTip': 'About Us',
       },
-      'Chinese': {
+      'Traditional_Chinese': {
         'currentLanguage': '目前語言',
         'noHistory': '尚無歷史紀錄，請拍照開始使用！',
         'cameraError': '相機不支援或無法使用，請嘗試從相簿選擇照片',
@@ -110,7 +115,8 @@ class HomeScreen extends HookWidget {
         'useTestImage': '使用測試圖片',
         'aiResult': "AI 結果",
         'aboutUsHeading': '關於我們',
-        'aboutUsMessage': 'IngreSafe 協助分析產品成分，確保對孕婦或哺乳期女性的安全。我們不會收集您的任何資訊，所有資料都儲存在您的本地設備上。如果您願意支持我們，我們有 Buy Me a Coffee 頁面。您的支持將讓我們非常感激，並激勵我們開發更多實用的產品。',
+        'aboutUsMessage':
+            'IngreSafe 協助分析產品成分，確保對孕婦或哺乳期女性的安全。我們不會收集您的任何資訊，所有資料都儲存在您的本地設備上。如果您願意支持我們，我們有 Buy Me a Coffee 頁面。您的支持將讓我們非常感激，並激勵我們開發更多實用的產品。',
         'cameraTip': '請拍一張照片，並分析成分列表。',
         'galleryTip': '請從圖庫選擇一張圖片，然後分析成分列表。',
         'aboutUsTip': '關於我們',
@@ -126,7 +132,8 @@ class HomeScreen extends HookWidget {
         'useTestImage': 'テスト画像を使う',
         'aiResult': "AI結果",
         'aboutUsHeading': '私たちについて',
-        'aboutUsMessage': 'IngreSafeは、妊婦や授乳中の女性にとって安全な製品成分の分析をサポートします。私たちはあなたの情報を収集することはありません。すべてのデータはあなたのローカルデバイスに保存されます。もし私たちをサポートしたい場合は、Buy Me a Coffeeページがあります。どんなサポートも大変感謝しており、それが私たちにとって新しい有用な製品を作り続ける力となります。',
+        'aboutUsMessage':
+            'IngreSafeは、妊婦や授乳中の女性にとって安全な製品成分の分析をサポートします。私たちはあなたの情報を収集することはありません。すべてのデータはあなたのローカルデバイスに保存されます。もし私たちをサポートしたい場合は、Buy Me a Coffeeページがあります。どんなサポートも大変感謝しており、それが私たちにとって新しい有用な製品を作り続ける力となります。',
         'cameraTip': '写真を撮って、成分リストを分析してください。',
         'galleryTip': 'ギャラリーから画像を選んで、成分リストを分析してください。',
         'aboutUsTip': '私たちについて',
@@ -142,7 +149,8 @@ class HomeScreen extends HookWidget {
         'useTestImage': '테스트 이미지 사용',
         'aiResult': "AI 결과",
         'aboutUsHeading': '우리에 대해',
-        'aboutUsMessage': 'IngreSafe는 임산부와 수유부를 위한 제품 성분의 안전성을 분석하는 데 도움을 줍니다. 저희는 어떠한 정보도 수집하지 않으며, 모든 데이터는 사용자의 로컬 기기에 저장됩니다. 저희를 응원하고 싶다면 Buy Me a Coffee 페이지를 통해 지원해주실 수 있습니다. 여러분의 소중한 지원은 저희에게 큰 힘이 되며, 더 유용한 제품을 만드는 데 도움이 됩니다.',
+        'aboutUsMessage':
+            'IngreSafe는 임산부와 수유부를 위한 제품 성분의 안전성을 분석하는 데 도움을 줍니다. 저희는 어떠한 정보도 수집하지 않으며, 모든 데이터는 사용자의 로컬 기기에 저장됩니다. 저희를 응원하고 싶다면 Buy Me a Coffee 페이지를 통해 지원해주실 수 있습니다. 여러분의 소중한 지원은 저희에게 큰 힘이 되며, 더 유용한 제품을 만드는 데 도움이 됩니다.',
         'cameraTip': '사진을 찍고 성분 목록을 분석해 주세요.',
         'galleryTip': '갤러리에서 이미지를 선택한 후 성분 목록을 분석해 주세요.',
         'aboutUsTip': '우리에 대해',
@@ -152,25 +160,25 @@ class HomeScreen extends HookWidget {
     final localizedLanguageNames = {
       'en': {
         'English': 'English',
-        'Chinese': 'Chinese',
+        'Traditional_Chinese': 'Traditional Chinese',
         'Japanese': 'Japanese',
         'Korean': 'Korean',
       },
       'zh_Hant': {
         'English': '英文',
-        'Chinese': '繁體中文',
+        'Traditional_Chinese': '繁體中文',
         'Japanese': '日文',
         'Korean': '韓文',
       },
       'ja': {
         'English': '英語',
-        'Chinese': '中国語',
+        'Traditional_Chinese': '中国語',
         'Japanese': '日本語',
         'Korean': '韓国語',
       },
       'ko': {
         'English': '영어',
-        'Chinese': '중국어',
+        'Traditional_Chinese': '중국어',
         'Japanese': '일본어',
         'Korean': '한국어',
       },
@@ -178,13 +186,11 @@ class HomeScreen extends HookWidget {
 
     final langCode = selectedLanguageName.value == 'English'
         ? 'en'
-        : selectedLanguageName.value == 'Chinese'
-        ? 'zh_Hant'
-        : selectedLanguageName.value == 'Japanese'
-        ? 'ja'
-        : 'ko'; // Default to Korean if nothing else matches
-
-    final localizedNames = localizedLanguageNames[langCode]!;
+        : selectedLanguageName.value == 'Traditional_Chinese'
+            ? 'zh_Hant'
+            : selectedLanguageName.value == 'Japanese'
+                ? 'ja'
+                : 'ko'; // Default to Korean if nothing else matches
 
     final t = languageTexts[selectedLanguageName.value]!;
 
@@ -192,15 +198,17 @@ class HomeScreen extends HookWidget {
       if (!await isConnected()) {
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text("No internet connection. Please try again later.")),
+            SnackBar(
+                content:
+                    Text("No internet connection. Please try again later.")),
           );
         }
         return;
       }
 
       try {
+        if (!context.mounted) return;
         isProcessing.value = true;
-
         // Load image from assets and write to a temporary file
         final byteData = await DefaultAssetBundle.of(context).load(assetPath);
         final tempDir = await getTemporaryDirectory();
@@ -208,8 +216,9 @@ class HomeScreen extends HookWidget {
         await file.writeAsBytes(byteData.buffer.asUint8List());
 
         // Call AI processing with image file
-        final aiResult = await AIService.processImageWithAI(file, selectedLanguageName.value);
-        if(hex.value != '' && aiResult.status == true){
+        final aiResult = await AIService.processImageWithAI(
+            file, selectedLanguageName.value);
+        if (hex.value != '' && aiResult.status == true) {
           ClickService.incrementUsage(hex.value); // Call the function
         }
 
@@ -246,20 +255,21 @@ class HomeScreen extends HookWidget {
       if (!await isConnected()) {
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text("No internet connection. Please try again later.")),
+            SnackBar(
+                content:
+                    Text("No internet connection. Please try again later.")),
           );
         }
         return;
       }
 
-      if (image == null) return;
-
       try {
         isProcessing.value = true;
         final file = File(image.path);
 
-        final aiResult = await AIService.processImageWithAI(file,selectedLanguageName.value);
-        if(hex.value != '' && aiResult.status == true){
+        final aiResult = await AIService.processImageWithAI(
+            file, selectedLanguageName.value);
+        if (hex.value != '' && aiResult.status == true) {
           ClickService.incrementUsage(hex.value); // Call the function
         }
 
@@ -304,14 +314,15 @@ class HomeScreen extends HookWidget {
                 selectedItemBuilder: (BuildContext context) {
                   return supportedLanguages.entries.map((entry) {
                     final langText = localizedLanguageNames[
-                    selectedLanguageName.value == 'English'
-                        ? 'en'
-                        : selectedLanguageName.value == 'Chinese'
-                        ? 'zh_Hant'
-                        : selectedLanguageName.value == 'Japanese'
-                        ? 'ja'
-                        : 'ko'
-                    ]?[entry.key] ?? entry.key;
+                            selectedLanguageName.value == 'English'
+                                ? 'en'
+                                : selectedLanguageName.value ==
+                                        'Traditional_Chinese'
+                                    ? 'zh_Hant'
+                                    : selectedLanguageName.value == 'Japanese'
+                                        ? 'ja'
+                                        : 'ko']?[entry.key] ??
+                        entry.key;
 
                     return Row(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -326,14 +337,13 @@ class HomeScreen extends HookWidget {
                 },
                 items: supportedLanguages.entries.map((entry) {
                   final localizedNames = localizedLanguageNames[
-                  selectedLanguageName.value == 'English'
-                      ? 'en'
-                      : selectedLanguageName.value == 'Chinese'
-                      ? 'zh_Hant'
-                      : selectedLanguageName.value == 'Japanese'
-                      ? 'ja'
-                      : 'ko'
-                  ]!;
+                      selectedLanguageName.value == 'English'
+                          ? 'en'
+                          : selectedLanguageName.value == 'Traditional_Chinese'
+                              ? 'zh_Hant'
+                              : selectedLanguageName.value == 'Japanese'
+                                  ? 'ja'
+                                  : 'ko']!;
                   return DropdownMenuItem<TextRecognitionScript>(
                     value: entry.value,
                     child: Text(localizedNames[entry.key] ?? entry.key),
@@ -360,40 +370,45 @@ class HomeScreen extends HookWidget {
             child: history.value.isEmpty
                 ? Center(child: Text(t['noHistory']!))
                 : ListView.builder(
-              itemCount: history.value.length,
-              itemBuilder: (context, index) {
-                final item = history.value[index];
-                return Card(
-                  margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 10),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
+                    itemCount: history.value.length,
+                    itemBuilder: (context, index) {
+                      final item = history.value[index];
+                      return Card(
+                        margin: const EdgeInsets.symmetric(
+                            vertical: 6, horizontal: 10),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        elevation: 2,
+                        child: ListTile(
+                          title: Text(
+                            item['text']!.substring(
+                              0,
+                              item['text']!.length > 50
+                                  ? 50
+                                  : item['text']!.length,
+                            ),
+                          ),
+                          subtitle: Text(
+                            item['analysis']!.substring(
+                              0,
+                              item['analysis']!.length > 100
+                                  ? 100
+                                  : item['analysis']!.length,
+                            ),
+                          ),
+                          onTap: () => showDialog(
+                            context: context,
+                            builder: (context) => ResultDialog(
+                              originalText: item['text']!,
+                              analysis: item['analysis']!,
+                              selectedLanguageName: langCode,
+                            ),
+                          ),
+                        ),
+                      );
+                    },
                   ),
-                  elevation: 2,
-                  child: ListTile(
-                    title: Text(
-                      item['text']!.substring(
-                        0,
-                        item['text']!.length > 50 ? 50 : item['text']!.length,
-                      ),
-                    ),
-                    subtitle: Text(
-                      item['analysis']!.substring(
-                        0,
-                        item['analysis']!.length > 100 ? 100 : item['analysis']!.length,
-                      ),
-                    ),
-                    onTap: () => showDialog(
-                      context: context,
-                      builder: (context) => ResultDialog(
-                        originalText: item['text']!,
-                        analysis: item['analysis']!,
-                        selectedLanguageName: langCode,
-                      ),
-                    ),
-                  ),
-                );
-              },
-            ),
           ),
         ],
       ),
@@ -408,20 +423,21 @@ class HomeScreen extends HookWidget {
               onPressed: isProcessing.value
                   ? null
                   : () async {
-                try {
-                  final image = await ImagePicker().pickImage(source: ImageSource.camera);
-                  await processImage(image);
-                } catch (e) {
-                  if (context.mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(t['cameraError']!),
-                        duration: const Duration(seconds: 2),
-                      ),
-                    );
-                  }
-                }
-              },
+                      try {
+                        final image = await ImagePicker()
+                            .pickImage(source: ImageSource.camera);
+                        await processImage(image);
+                      } catch (e) {
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(t['cameraError']!),
+                              duration: const Duration(seconds: 2),
+                            ),
+                          );
+                        }
+                      }
+                    },
               tooltip: t['takePhoto'],
               child: const Icon(Icons.camera_alt),
             ),
@@ -432,26 +448,27 @@ class HomeScreen extends HookWidget {
             // title: t['galleryTip'],
             description: t['galleryTip'],
             child: FloatingActionButton(
-                onPressed: isProcessing.value
-                    ? null
-                    : () async {
-                  try {
-                    final image = await ImagePicker().pickImage(source: ImageSource.gallery);
-                    await processImage(image);
-                  } catch (e) {
-                    if (context.mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(t['galleryError']!),
-                          duration: const Duration(seconds: 2),
-                        ),
-                      );
-                    }
-                  }
-                },
-                tooltip: t['chooseFromGallery'],
-                child: const Icon(Icons.photo_library),
-              ),
+              onPressed: isProcessing.value
+                  ? null
+                  : () async {
+                      try {
+                        final image = await ImagePicker()
+                            .pickImage(source: ImageSource.gallery);
+                        await processImage(image);
+                      } catch (e) {
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(t['galleryError']!),
+                              duration: const Duration(seconds: 2),
+                            ),
+                          );
+                        }
+                      }
+                    },
+              tooltip: t['chooseFromGallery'],
+              child: const Icon(Icons.photo_library),
+            ),
           ),
           const SizedBox(width: 16),
           //test button start
@@ -486,90 +503,94 @@ class HomeScreen extends HookWidget {
             // title: t['aboutUsTip'],
             description: t['aboutUsTip'],
             child: FloatingActionButton(
-                heroTag: 'aboutUsBtn',
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      elevation: 24,
-                      insetPadding: EdgeInsets.symmetric(horizontal: 40, vertical: 24),
-                      titlePadding: EdgeInsets.fromLTRB(24, 24, 8, 0),
-                      contentPadding: EdgeInsets.fromLTRB(24, 20, 24, 24),
-                      title: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: Text(
-                              t['aboutUsHeading']!,
-                              style: TextStyle(
-                                fontSize: 22,
-                                fontWeight: FontWeight.bold,
-                                color: Theme.of(context).colorScheme.primary,
-                              ),
+              heroTag: 'aboutUsBtn',
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    elevation: 24,
+                    insetPadding:
+                        EdgeInsets.symmetric(horizontal: 40, vertical: 24),
+                    titlePadding: EdgeInsets.fromLTRB(24, 24, 8, 0),
+                    contentPadding: EdgeInsets.fromLTRB(24, 20, 24, 24),
+                    title: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            t['aboutUsHeading']!,
+                            style: TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                              color: Theme.of(context).colorScheme.primary,
                             ),
                           ),
-                          IconButton(
-                            icon: Icon(Icons.close, size: 28),
-                            tooltip: 'Close',
-                            onPressed: () => Navigator.of(context).pop(),
-                            splashRadius: 24,
-                          ),
-                        ],
-                      ),
-                      content: SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.3,
-                        width: MediaQuery.of(context).size.width * 0.8,
-                        child: SingleChildScrollView(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                t['aboutUsMessage']!,
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  height: 1.4,
-                                ),
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.close, size: 28),
+                          tooltip: 'Close',
+                          onPressed: () => Navigator.of(context).pop(),
+                          splashRadius: 24,
+                        ),
+                      ],
+                    ),
+                    content: SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.3,
+                      width: MediaQuery.of(context).size.width * 0.8,
+                      child: SingleChildScrollView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              t['aboutUsMessage']!,
+                              style: TextStyle(
+                                fontSize: 16,
+                                height: 1.4,
                               ),
-                              const SizedBox(height: 16),
-                              RichText(
-                                text: TextSpan(
-                                  children: [
-                                    TextSpan(
-                                      text: 'Buy me a coffee',
-                                      style: TextStyle(
-                                        color: Colors.blueAccent,
-                                        decoration: TextDecoration.underline,
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 16,
-                                      ),
-                                      recognizer: TapGestureRecognizer()
-                                        ..onTap = () async {
-                                          final url = Uri.parse('https://buymeacoffee.com/ingresafe');
-                                          try {
-                                            if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
-                                              // print('Could not launch $url');
-                                            }
-                                          } catch (e) {
-                                            // print('Error launching URL: $e');
-                                          }
-                                        },
+                            ),
+                            const SizedBox(height: 16),
+                            RichText(
+                              text: TextSpan(
+                                children: [
+                                  TextSpan(
+                                    text: 'Buy me a coffee',
+                                    style: TextStyle(
+                                      color: Colors.blueAccent,
+                                      decoration: TextDecoration.underline,
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 16,
                                     ),
-                                  ],
-                                ),
+                                    recognizer: TapGestureRecognizer()
+                                      ..onTap = () async {
+                                        final url = Uri.parse(
+                                            'https://buymeacoffee.com/ingresafe');
+                                        try {
+                                          if (!await launchUrl(url,
+                                              mode: LaunchMode
+                                                  .externalApplication)) {
+                                            // print('Could not launch $url');
+                                          }
+                                        } catch (e) {
+                                          // print('Error launching URL: $e');
+                                        }
+                                      },
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
-                  );
-                },
-                tooltip: 'About Us',
-                child: const Icon(Icons.info_outline),
-              ),
+                  ),
+                );
+              },
+              tooltip: 'About Us',
+              child: const Icon(Icons.info_outline),
+            ),
           ),
         ],
       ),
