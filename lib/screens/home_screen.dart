@@ -12,6 +12,7 @@ import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart
 
 import '../services/ai_service.dart';
 import '../services/text_storage_service.dart';
+import '../services/history_storage_service.dart';
 import '../services/usage_service.dart';
 import '../widgets/result_dialog.dart';
 
@@ -68,6 +69,10 @@ class HomeScreen extends HookWidget {
             attempts++;
           }
         }
+
+        final storedHistory = await HistoryStorageService.loadHistory();
+        history.value = storedHistory;
+
       });
 
       return null;
@@ -160,26 +165,26 @@ class HomeScreen extends HookWidget {
     final localizedLanguageNames = {
       'en': {
         'English': 'English',
-        'Traditional_Chinese': 'Traditional Chinese',
-        'Japanese': 'Japanese',
-        'Korean': 'Korean',
+        'Traditional_Chinese': '繁體中文',
+        'Japanese': '日本語',
+        'Korean': '한국어',
       },
       'zh_Hant': {
-        'English': '英文',
+        'English': 'English',
         'Traditional_Chinese': '繁體中文',
-        'Japanese': '日文',
-        'Korean': '韓文',
+        'Japanese': '日本語',
+        'Korean': '한국어',
       },
       'ja': {
-        'English': '英語',
-        'Traditional_Chinese': '中国語',
+        'English': 'English',
+        'Traditional_Chinese': '繁體中文',
         'Japanese': '日本語',
-        'Korean': '韓国語',
+        'Korean': '한국어',
       },
       'ko': {
-        'English': '영어',
-        'Traditional_Chinese': '중국어',
-        'Japanese': '일본어',
+        'English': 'English',
+        'Traditional_Chinese': '繁體中文',
+        'Japanese': '日本語',
         'Korean': '한국어',
       },
     };
@@ -227,6 +232,7 @@ class HomeScreen extends HookWidget {
           {'text': t['aiResult']!, 'analysis': aiResult.result},
           ...history.value,
         ];
+        await HistoryStorageService.saveHistory(history.value);
 
         if (context.mounted) {
           showDialog(
@@ -277,6 +283,7 @@ class HomeScreen extends HookWidget {
           {'text': 'Image sent to AI', 'analysis': aiResult.result},
           ...history.value,
         ];
+        await HistoryStorageService.saveHistory(history.value);
 
         if (context.mounted) {
           showDialog(
