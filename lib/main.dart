@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:showcaseview/showcaseview.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'screens/home_screen.dart';
 import 'providers/theme_provider.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   await dotenv.load(fileName: ".env");
   
   runApp(
@@ -21,14 +27,18 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<ThemeProvider>(
-      builder: (context, themeProvider, child) {
-        return MaterialApp(
-          title: 'Photo Text AI',
-          theme: ThemeData.light(useMaterial3: true),
-          darkTheme: ThemeData.dark(useMaterial3: true),
-          themeMode: themeProvider.themeMode,
-          home: const HomeScreen(),
+    return ShowCaseWidget(
+      builder: (context) {
+        return Consumer<ThemeProvider>(
+          builder: (context, themeProvider, child) {
+            return MaterialApp(
+              title: 'IngreSafe',
+              theme: ThemeData.light(useMaterial3: true),
+              darkTheme: ThemeData.dark(useMaterial3: true),
+              themeMode: themeProvider.themeMode,
+              home: const HomeScreen(),
+            );
+          },
         );
       },
     );

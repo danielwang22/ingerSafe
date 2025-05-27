@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "482610291689",
+    "project_id": "ingresafe-dd262",
+    "storage_bucket": "ingresafe-dd262.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:482610291689:android:b6223a3f9f0627e4cda178",
+        "android_client_info": {
+          "package_name": "com.afternoonteacoders.ingresafe"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBLRDj6pK3WlSrTPIKAnfhdSScW-KIW4Nk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:482610291689:android:b3d110eb0225843acda178",
+        "android_client_info": {
+          "package_name": "com.afternoonteacoders.ingresafe"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBLRDj6pK3WlSrTPIKAnfhdSScW-KIW4Nk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

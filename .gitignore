@@ -3,6 +3,7 @@
 *.log
 *.pyc
 *.swp
+*.lock
 .DS_Store
 .atom/
 .buildlog/
@@ -39,8 +40,25 @@ app.*.map.json
 
 # Android Studio will place build artifacts here
 /android/app/debug
+/android/app/.cxx
 /android/app/profile
 /android/app/release
+/android/app/keystore
+
+# iOS
+ios/build
+ios/Flutter/build
+ios/Runner.xcworkspace
+ios/Runner.xcodeproj/xcuserdata
+ios/Runner.xcodeproj/project.xcworkspace/xcuserdata
+ios/.vagrant
+
+# Windows build
+windows/build
+windows/.vs
+windows/CMakeCache.txt
+windows/CMakeFiles
+Thumbs.db
 
 # Test
 test.*

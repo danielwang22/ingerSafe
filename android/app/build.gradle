@@ -1,12 +1,15 @@
 plugins {
     id "com.android.application"
+    // START: FlutterFire Configuration
+    id 'com.google.gms.google-services'
+    // END: FlutterFire Configuration
     id "kotlin-android"
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id "dev.flutter.flutter-gradle-plugin"
 }
 
 android {
-    namespace = "com.example.photo_text_ai"
+    namespace = "com.afternoonteacoders.ingresafe"
     compileSdk = 35
     ndkVersion = "26.1.10909125"
 
@@ -20,21 +23,38 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.photo_text_ai"
+        applicationId = "com.afternoonteacoders.ingresafe"
         minSdk = 24
         targetSdk = 35
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 4
+        versionName = "0.11"
+    }
+
+    signingConfigs {
+        release {
+            storeFile file("keystore/ingresafe-release-key.jks")
+            storePassword "afternoonteacoders"
+            keyAlias "ingresafe"
+            keyPassword "afternoonteacoders"
+        }
     }
 
     buildTypes {
         release {
-            signingConfig signingConfigs.debug
+            debuggable false
+//            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.release // ← This line changed
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
+            // 👇 Add this to generate native debug symbols
+            ndk {
+                debugSymbolLevel = 'FULL'
+            }
         }
         debug {
+            debuggable true
             buildConfigField "Boolean", "ENABLE_R8", "true"
         }
     }
@@ -47,4 +67,13 @@ android {
 
 flutter {
     source = "../.."
+}
+
+dependencies {
+    // 👇 This is required for Chinese text recognition to work
+    implementation 'com.google.mlkit:text-recognition-chinese:16.0.0'
+    implementation 'com.android.support:support-v4:28.0.0'
+    implementation 'com.google.firebase:firebase-core:21.1.0' // Add Firebase dependency (if not already added)
+    implementation 'com.google.firebase:firebase-firestore:24.5.0'  // Firestore SDK dependency
+    // Add other Firebase dependencies here
 }
