@@ -112,7 +112,6 @@ class HomeScreen extends HookWidget {
       await prefs.setString('selected_language', newLang);
     }
 
-
     final languageTexts = {
       'English': {
         'currentLanguage': 'Current Language',
@@ -387,6 +386,7 @@ class HomeScreen extends HookWidget {
                     final langName = supportedLanguages.entries
                         .firstWhere((entry) => entry.value == newLang)
                         .key;
+                    updateLanguage(langName);
                     selectedLanguageName.value = langName;
                   }
                 },
