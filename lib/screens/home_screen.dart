@@ -35,6 +35,7 @@ class HomeScreen extends HookWidget {
     final _cameraKey = useMemoized(() => GlobalKey(), []);
     final _galleryKey = useMemoized(() => GlobalKey(), []);
     final _aboutUsKey = useMemoized(() => GlobalKey(), []);
+    final isLoading = useState(true);
 
     // 🧠 Automatically call getOrCreateHex when page loads
     useEffect(() {
@@ -87,6 +88,29 @@ class HomeScreen extends HookWidget {
     final selectedLanguage =
         useState<TextRecognitionScript>(TextRecognitionScript.chinese);
     final selectedLanguageName = useState<String>('Traditional_Chinese');
+
+    useEffect(() {
+      () async {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        String? savedLang = prefs.getString('selected_language');
+
+        if (savedLang != null && supportedLanguages.containsKey(savedLang)) {
+          selectedLanguageName.value = savedLang;
+          selectedLanguage.value = supportedLanguages[savedLang]!;
+        }
+        isLoading.value = false; // Done loading
+      }();
+      return null;
+    }, []);
+
+    Future<void> updateLanguage(String newLang) async {
+      if (!supportedLanguages.containsKey(newLang)) return;
+      selectedLanguageName.value = newLang;
+      selectedLanguage.value = supportedLanguages[newLang]!;
+
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString('selected_language', newLang);
+    }
 
     final languageTexts = {
       'English': {
@@ -362,6 +386,7 @@ class HomeScreen extends HookWidget {
                     final langName = supportedLanguages.entries
                         .firstWhere((entry) => entry.value == newLang)
                         .key;
+                    updateLanguage(langName);
                     selectedLanguageName.value = langName;
                   }
                 },
@@ -499,7 +524,8 @@ class HomeScreen extends HookWidget {
           // FloatingActionButton(
           //   onPressed: () async {
           //     final prefs = await SharedPreferences.getInstance();
-          //     await prefs.remove('hasShownTutorial'); // 🔁 This resets the flag
+          //     // await prefs.remove('hasShownTutorial'); // 🔁 This resets the flag
+          //     await prefs.remove('selected_language'); // 🔁 This resets the flag
           //   },
           //   child: Text("Reset Tutorial"),
           // ),
