@@ -22,6 +22,7 @@ class ResultDialog extends StatelessWidget {
         'potentiallyHarmfulIngredients': 'Potentially harmful ingredients:',
         'originalText': 'Original Text',
         'aiAnalysis': 'AI Analysis',
+        'copyText': 'Copy Text',
         'copyOriginal': 'Original text copied',
         'copyAnalysis': 'Analysis copied',
       },
@@ -31,6 +32,7 @@ class ResultDialog extends StatelessWidget {
         'potentiallyHarmfulIngredients': '可能有害的成分：',
         'originalText': '原始文字',
         'aiAnalysis': 'AI 分析',
+        'copyText': '複製',
         'copyOriginal': '已複製原始文字',
         'copyAnalysis': '已複製分析結果',
       },
@@ -40,6 +42,7 @@ class ResultDialog extends StatelessWidget {
         'potentiallyHarmfulIngredients': '潜在的に有害な成分：',
         'originalText': '原文',
         'aiAnalysis': 'AI分析',
+        'copyText': 'コピー',
         'copyOriginal': '原文をコピーしました',
         'copyAnalysis': '分析結果をコピーしました',
       },
@@ -49,6 +52,7 @@ class ResultDialog extends StatelessWidget {
         'potentiallyHarmfulIngredients': '잠재적으로 해로운 성분:',
         'originalText': '원본 텍스트',
         'aiAnalysis': 'AI 분석',
+        'copyText': '복사',
         'copyOriginal': '원본 텍스트가 복사되었습니다',
         'copyAnalysis': '분석 결과가 복사되었습니다',
       },
@@ -86,12 +90,40 @@ class ResultDialog extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 16),
-              Text(
-                labels['aiAnalysis']!,
-                style:
-                    const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    labels['aiAnalysis']!,
+                    style: const TextStyle(
+                        fontSize: 14, fontWeight: FontWeight.bold),
+                  ),
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      padding: EdgeInsets.all(5), // 依需求調整
+                      minimumSize: Size(0, 0), // 依需求調整
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    ),
+                    onPressed: () {
+                      Clipboard.setData(ClipboardData(text: analysis));
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text(labels['copyAnalysis']!)),
+                      );
+                    },
+                    child: Row(
+                      children: [
+                        Icon(Icons.copy),
+                        SizedBox(width: 6),
+                        Text(labels['copyText']!,
+                            style: TextStyle(
+                                fontSize: 14, fontWeight: FontWeight.bold)),
+                      ],
+                    ),
+                  )
+                ],
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 10),
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
@@ -111,15 +143,6 @@ class ResultDialog extends StatelessWidget {
                           height: 1.5,
                         ),
                       ),
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.copy),
-                      onPressed: () {
-                        Clipboard.setData(ClipboardData(text: analysis));
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text(labels['copyAnalysis']!)),
-                        );
-                      },
                     ),
                   ],
                 ),
