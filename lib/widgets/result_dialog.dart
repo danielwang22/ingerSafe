@@ -25,6 +25,7 @@ class ResultDialog extends StatelessWidget {
         'copyText': 'Copy Text',
         'copyOriginal': 'Original text copied',
         'copyAnalysis': 'Analysis copied',
+        'disclaimer': '*This app helps you look up information about ingredients. Always consult your doctor. This app does not provide medical advice.',
       },
       'zh_Hant': {
         'analysisResult': '分析結果',
@@ -35,6 +36,7 @@ class ResultDialog extends StatelessWidget {
         'copyText': '複製',
         'copyOriginal': '已複製原始文字',
         'copyAnalysis': '已複製分析結果',
+        'disclaimer': '*這款 App 協助您查詢成分相關資訊。請務必諮詢醫師，本 App 並不提供醫療建議。',
       },
       'ja': {
         'analysisResult': '分析結果',
@@ -45,6 +47,7 @@ class ResultDialog extends StatelessWidget {
         'copyText': 'コピー',
         'copyOriginal': '原文をコピーしました',
         'copyAnalysis': '分析結果をコピーしました',
+        'disclaimer': '*このアプリは成分に関する情報を調べるのに役立ちます。必ず医師にご相談ください。このアプリは医療アドバイスを提供するものではありません。',
       },
       'ko': {
         'analysisResult': '분석 결과',
@@ -55,6 +58,7 @@ class ResultDialog extends StatelessWidget {
         'copyText': '복사',
         'copyOriginal': '원본 텍스트가 복사되었습니다',
         'copyAnalysis': '분석 결과가 복사되었습니다',
+        'disclaimer': '*이 앱은 성분에 대한 정보를 확인하는 데 도움을 줍니다. 항상 의사와 상담하세요. 이 앱은 의학적 조언을 제공하지 않습니다.',
       },
     };
 
@@ -88,6 +92,15 @@ class ResultDialog extends StatelessWidget {
                     onPressed: () => Navigator.of(context).pop(),
                   ),
                 ],
+              ),
+              const SizedBox(height: 8),
+              Text(
+                labels['disclaimer']!,
+                style: const TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.bold,
+                ),
+                softWrap: true,
               ),
               const SizedBox(height: 16),
               Row(
