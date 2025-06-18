@@ -16,7 +16,7 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await dotenv.load(fileName: ".env");
-  
+
   runApp(
     ChangeNotifierProvider(
       create: (_) => ThemeProvider(),
@@ -42,9 +42,11 @@ class MyApp extends StatelessWidget {
               initialRoute: '/',
               routes: {
                 '/': (context) => const StartupScreen(),
-                '/select-language': (context) => const LanguageSelectionScreen(),
+                '/select-language': (context) =>
+                    const LanguageSelectionScreen(),
                 '/home': (context) => const HomeScreen(),
               },
+              debugShowCheckedModeBanner: false, // 這一行可以關閉右上角的 DEBUG 標籤
             );
           },
         );
