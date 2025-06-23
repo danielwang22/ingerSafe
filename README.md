@@ -1,4 +1,4 @@
-# Photo Text AI - Flutter 版本
+# Ingresafe - Flutter 版本
 
 這是一個功能強大的照片文字識別和 AI 分析應用程式，使用 Flutter 開發，能夠從圖片中提取文字並進行智能分析。
 
