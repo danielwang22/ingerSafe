@@ -37,7 +37,7 @@ class HomeScreen extends HookWidget {
     final _aboutUsKey = useMemoized(() => GlobalKey(), []);
     final isLoading = useState(true);
 
-    // 🧠 Automatically call getOrCreateHex when page loads
+    // Automatically call getOrCreateHex when page loads
     useEffect(() {
       WidgetsBinding.instance.addPostFrameCallback((_) async {
         final result = await getOrCreateHex();
@@ -73,7 +73,6 @@ class HomeScreen extends HookWidget {
 
         final storedHistory = await HistoryStorageService.loadHistory();
         history.value = storedHistory;
-
       });
 
       return null;
@@ -524,8 +523,8 @@ class HomeScreen extends HookWidget {
           // FloatingActionButton(
           //   onPressed: () async {
           //     final prefs = await SharedPreferences.getInstance();
-          //     // await prefs.remove('hasShownTutorial'); // 🔁 This resets the flag
-          //     await prefs.remove('selected_language'); // 🔁 This resets the flag
+          //     // await prefs.remove('hasShownTutorial'); // This resets the flag
+          //     await prefs.remove('selected_language'); // This resets the flag
           //   },
           //   child: Text("Reset Tutorial"),
           // ),
@@ -584,36 +583,38 @@ class HomeScreen extends HookWidget {
                                 height: 1.4,
                               ),
                             ),
-                            const SizedBox(height: 16),
-                            RichText(
-                              text: TextSpan(
-                                children: [
-                                  TextSpan(
-                                    text: 'Buy me a coffee',
-                                    style: TextStyle(
-                                      color: Colors.blueAccent,
-                                      decoration: TextDecoration.underline,
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 16,
-                                    ),
-                                    recognizer: TapGestureRecognizer()
-                                      ..onTap = () async {
-                                        final url = Uri.parse(
-                                            'https://buymeacoffee.com/ingresafe');
-                                        try {
-                                          if (!await launchUrl(url,
-                                              mode: LaunchMode
-                                                  .externalApplication)) {
-                                            // print('Could not launch $url');
+                            if (Platform.isAndroid) ...[
+                              const SizedBox(height: 16),
+                              RichText(
+                                text: TextSpan(
+                                  children: [
+                                    TextSpan(
+                                      text: 'Buy me a coffee',
+                                      style: TextStyle(
+                                        color: Colors.blueAccent,
+                                        decoration: TextDecoration.underline,
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 16,
+                                      ),
+                                      recognizer: TapGestureRecognizer()
+                                        ..onTap = () async {
+                                          final url = Uri.parse(
+                                              'https://buymeacoffee.com/ingresafe');
+                                          try {
+                                            if (!await launchUrl(url,
+                                                mode: LaunchMode
+                                                    .externalApplication)) {
+                                              // print('Could not launch $url');
+                                            }
+                                          } catch (e) {
+                                            // print('Error launching URL: $e');
                                           }
-                                        } catch (e) {
-                                          // print('Error launching URL: $e');
-                                        }
-                                      },
-                                  ),
-                                ],
+                                        },
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
+                            ],
                           ],
                         ),
                       ),
