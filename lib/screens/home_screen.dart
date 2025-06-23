@@ -125,8 +125,9 @@ class HomeScreen extends HookWidget {
         'useTestImage': 'Use Test Image',
         'aiResult': "Ai Result",
         'aboutUsHeading': 'About Us',
-        'aboutUsMessage':
-            'IngreSafe helps analyze product ingredients to ensure safety for pregnant or breastfeeding women. We do not collect any of your information. All information is store in your local device. If you want support us we have a Buymeacoffee. Any support will be greatly appreciate and will push us to create more useful product.',
+        'aboutUsMessage': Platform.isAndroid
+            ? 'IngreSafe helps analyze product ingredients to ensure safety for pregnant or breastfeeding women. We do not collect any of your information. All information is store in your local device. If you want support us we have a Buymeacoffee. Any support will be greatly appreciate and will push us to create more useful product.'
+            : 'IngreSafe helps analyze product ingredients to ensure safety for pregnant or breastfeeding women. We do not collect any of your information. All information is store in your local device.',
         'cameraTip': 'Take a photo and analyze the ingredient list.',
         'galleryTip':
             'Choose an image from the gallery and then analyze the ingredient list.',
@@ -143,8 +144,9 @@ class HomeScreen extends HookWidget {
         'useTestImage': '使用測試圖片',
         'aiResult': "AI 結果",
         'aboutUsHeading': '關於我們',
-        'aboutUsMessage':
-            'IngreSafe 協助分析產品成分，確保對孕婦或哺乳期女性的安全。我們不會收集您的任何資訊，所有資料都儲存在您的本地設備上。如果您願意支持我們，我們有 Buy Me a Coffee 頁面。您的支持將讓我們非常感激，並激勵我們開發更多實用的產品。',
+        'aboutUsMessage': Platform.isAndroid
+            ? 'IngreSafe 協助分析產品成分，確保對孕婦或哺乳期女性的安全。我們不會收集您的任何資訊，所有資料都儲存在您的本地設備上。如果您願意支持我們，我們有 Buy Me a Coffee 頁面。您的支持將讓我們非常感激，並激勵我們開發更多實用的產品。'
+            : 'IngreSafe 協助分析產品成分，確保對孕婦或哺乳期女性的安全。我們不會收集您的任何資訊，所有資料都儲存在您的本地設備上。',
         'cameraTip': '請拍一張照片，並分析成分列表。',
         'galleryTip': '請從圖庫選擇一張圖片，然後分析成分列表。',
         'aboutUsTip': '關於我們',
@@ -160,8 +162,9 @@ class HomeScreen extends HookWidget {
         'useTestImage': 'テスト画像を使う',
         'aiResult': "AI結果",
         'aboutUsHeading': '私たちについて',
-        'aboutUsMessage':
-            'IngreSafeは、妊婦や授乳中の女性にとって安全な製品成分の分析をサポートします。私たちはあなたの情報を収集することはありません。すべてのデータはあなたのローカルデバイスに保存されます。もし私たちをサポートしたい場合は、Buy Me a Coffeeページがあります。どんなサポートも大変感謝しており、それが私たちにとって新しい有用な製品を作り続ける力となります。',
+        'aboutUsMessage': Platform.isAndroid
+            ? 'IngreSafeは、妊婦や授乳中の女性にとって安全な製品成分の分析をサポートします。私たちはあなたの情報を収集することはありません。すべてのデータはあなたのローカルデバイスに保存されます。もし私たちをサポートしたい場合は、Buy Me a Coffeeページがあります。どんなサポートも大変感謝しており、それが私たちにとって新しい有用な製品を作り続ける力となります。'
+            : 'IngreSafeは、妊婦や授乳中の女性にとって安全な製品成分の分析をサポートします。私たちはあなたの情報を収集することはありません。すべてのデータはあなたのローカルデバイスに保存されます。',
         'cameraTip': '写真を撮って、成分リストを分析してください。',
         'galleryTip': 'ギャラリーから画像を選んで、成分リストを分析してください。',
         'aboutUsTip': '私たちについて',
@@ -177,8 +180,9 @@ class HomeScreen extends HookWidget {
         'useTestImage': '테스트 이미지 사용',
         'aiResult': "AI 결과",
         'aboutUsHeading': '우리에 대해',
-        'aboutUsMessage':
-            'IngreSafe는 임산부와 수유부를 위한 제품 성분의 안전성을 분석하는 데 도움을 줍니다. 저희는 어떠한 정보도 수집하지 않으며, 모든 데이터는 사용자의 로컬 기기에 저장됩니다. 저희를 응원하고 싶다면 Buy Me a Coffee 페이지를 통해 지원해주실 수 있습니다. 여러분의 소중한 지원은 저희에게 큰 힘이 되며, 더 유용한 제품을 만드는 데 도움이 됩니다.',
+        'aboutUsMessage': Platform.isAndroid
+            ? 'IngreSafe는 임산부와 수유부를 위한 제품 성분의 안전성을 분석하는 데 도움을 줍니다. 저희는 어떠한 정보도 수집하지 않으며, 모든 데이터는 사용자의 로컬 기기에 저장됩니다. 저희를 응원하고 싶다면 Buy Me a Coffee 페이지를 통해 지원해주실 수 있습니다. 여러분의 소중한 지원은 저희에게 큰 힘이 되며, 더 유용한 제품을 만드는 데 도움이 됩니다.'
+            : 'IngreSafe는 임산부와 수유부를 위한 제품 성분의 안전성을 분석하는 데 도움을 줍니다. 저희는 어떠한 정보도 수집하지 않으며, 모든 데이터는 사용자의 로컬 기기에 저장됩니다.',
         'cameraTip': '사진을 찍고 성분 목록을 분석해 주세요.',
         'galleryTip': '갤러리에서 이미지를 선택한 후 성분 목록을 분석해 주세요.',
         'aboutUsTip': '우리에 대해',
