@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:url_launcher/url_launcher.dart';
+import '../constants/app_strings.dart';
 
 class ResultDialog extends StatelessWidget {
   final String originalText;
@@ -15,52 +18,8 @@ class ResultDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Map<String, Map<String, String>> localizedLabels = {
-      'en': {
-        'analysisResult': 'Analysis Result',
-        'noHarmfulIngredients': 'No harmful ingredients detected.',
-        'potentiallyHarmfulIngredients': 'Potentially harmful ingredients:',
-        'originalText': 'Original Text',
-        'aiAnalysis': 'AI Analysis',
-        'copyText': 'Copy Text',
-        'copyOriginal': 'Original text copied',
-        'copyAnalysis': 'Analysis copied',
-        'disclaimer': '*This app helps you look up information about ingredients. Always consult your doctor. This app does not provide medical advice.',
-      },
-      'zh_Hant': {
-        'analysisResult': '分析結果',
-        'noHarmfulIngredients': '未檢測到有害成分。',
-        'potentiallyHarmfulIngredients': '可能有害的成分：',
-        'originalText': '原始文字',
-        'aiAnalysis': 'AI 分析',
-        'copyText': '複製',
-        'copyOriginal': '已複製原始文字',
-        'copyAnalysis': '已複製分析結果',
-        'disclaimer': '*這款 App 協助您查詢成分相關資訊。請務必諮詢醫師，本 App 並不提供醫療建議。',
-      },
-      'ja': {
-        'analysisResult': '分析結果',
-        'noHarmfulIngredients': '有害な成分は検出されませんでした。',
-        'potentiallyHarmfulIngredients': '潜在的に有害な成分：',
-        'originalText': '原文',
-        'aiAnalysis': 'AI分析',
-        'copyText': 'コピー',
-        'copyOriginal': '原文をコピーしました',
-        'copyAnalysis': '分析結果をコピーしました',
-        'disclaimer': '*このアプリは成分に関する情報を調べるのに役立ちます。必ず医師にご相談ください。このアプリは医療アドバイスを提供するものではありません。',
-      },
-      'ko': {
-        'analysisResult': '분석 결과',
-        'noHarmfulIngredients': '해로운 성분이 감지되지 않았습니다.',
-        'potentiallyHarmfulIngredients': '잠재적으로 해로운 성분:',
-        'originalText': '원본 텍스트',
-        'aiAnalysis': 'AI 분석',
-        'copyText': '복사',
-        'copyOriginal': '원본 텍스트가 복사되었습니다',
-        'copyAnalysis': '분석 결과가 복사되었습니다',
-        'disclaimer': '*이 앱은 성분에 대한 정보를 확인하는 데 도움을 줍니다. 항상 의사와 상담하세요. 이 앱은 의학적 조언을 제공하지 않습니다.',
-      },
-    };
+    final Map<String, Map<String, String>> localizedLabels =
+        AppStrings.resultDialogTexts;
 
     final labels = switch (selectedLanguageName) {
       'zh_Hant' => localizedLabels['zh_Hant']!,
@@ -97,21 +56,17 @@ class ResultDialog extends StatelessWidget {
               Text(
                 labels['disclaimer']!,
                 style: const TextStyle(
-                  fontSize: 11,
+                  fontSize: 12,
                   fontWeight: FontWeight.bold,
+                  height: 1.6,
                 ),
                 softWrap: true,
               ),
               const SizedBox(height: 16),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text(
-                    labels['aiAnalysis']!,
-                    style: const TextStyle(
-                        fontSize: 14, fontWeight: FontWeight.bold),
-                  ),
                   TextButton(
                     style: TextButton.styleFrom(
                       padding: EdgeInsets.all(5), // 依需求調整
@@ -146,14 +101,84 @@ class ResultDialog extends StatelessWidget {
                 child: Row(
                   children: [
                     Expanded(
-                      child: Text(
-                        analysis,
-                        style: TextStyle(
-                          fontFamily: 'zh-tw',
-                          fontSize: 16,
-                          letterSpacing: 1.5,
-                          textBaseline: TextBaseline.alphabetic,
-                          height: 1.5,
+                      child: MarkdownBody(
+                        data: analysis,
+                        onTapLink: (text, href, title) {
+                          // 使用預設瀏覽器開啟連結
+                          if (href != null) launchUrl(Uri.parse(href));
+                        },
+                        styleSheet: MarkdownStyleSheet(
+                          p: TextStyle(
+                            fontFamily:
+                                'Noto Sans CJK TC, Noto Sans CJK SC, Noto Sans CJK, system-ui, sans-serif',
+                            fontSize: 16,
+                            letterSpacing: 1.5,
+                            height: 1.5,
+                          ),
+                          h1: TextStyle(
+                            fontFamily:
+                                'Noto Sans CJK TC, Noto Sans CJK SC, Noto Sans CJK, system-ui, sans-serif',
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            height: 1.8,
+                          ),
+                          h2: TextStyle(
+                            fontFamily:
+                                'Noto Sans CJK TC, Noto Sans CJK SC, Noto Sans CJK, system-ui, sans-serif',
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            height: 1.7,
+                          ),
+                          h3: TextStyle(
+                            fontFamily:
+                                'Noto Sans CJK TC, Noto Sans CJK SC, Noto Sans CJK, system-ui, sans-serif',
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            height: 1.6,
+                          ),
+                          h4: TextStyle(
+                            fontFamily:
+                                'Noto Sans CJK TC, Noto Sans CJK SC, Noto Sans CJK, system-ui, sans-serif',
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            height: 1.5,
+                          ),
+                          h5: TextStyle(
+                            fontFamily:
+                                'Noto Sans CJK TC, Noto Sans CJK SC, Noto Sans CJK, system-ui, sans-serif',
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                            height: 1.4,
+                          ),
+                          h6: TextStyle(
+                            fontFamily:
+                                'Noto Sans CJK TC, Noto Sans CJK SC, Noto Sans CJK, system-ui, sans-serif',
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                            height: 1.3,
+                          ),
+                          listBullet: TextStyle(
+                            fontFamily:
+                                'Noto Sans CJK TC, Noto Sans CJK SC, Noto Sans CJK, system-ui, sans-serif',
+                            fontSize: 16,
+                          ),
+                          strong: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontFamily:
+                                'Noto Sans CJK TC, Noto Sans CJK SC, Noto Sans CJK, system-ui, sans-serif',
+                          ),
+                          em: TextStyle(
+                            fontStyle: FontStyle.italic,
+                            fontFamily:
+                                'Noto Sans CJK TC, Noto Sans CJK SC, Noto Sans CJK, system-ui, sans-serif',
+                          ),
+                          a: TextStyle(
+                            color:
+                                Theme.of(context).brightness == Brightness.light
+                                    ? const Color(0xFF4F378B) // dark mode
+                                    : const Color(0xFFEADDFF), // light mode
+                            decoration: TextDecoration.none,
+                          ),
                         ),
                       ),
                     ),

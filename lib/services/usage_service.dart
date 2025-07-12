@@ -16,14 +16,8 @@ class ClickService {
           transaction.update(docRef, {'usage': currentUsage + 1});
         }
       });
-      // print('Usage incremented for $hexId');
     } on FirebaseException catch (e) {
-      if (e.code == 'resource-exhausted') {
-        // Quota exceeded — skip incrementing
-        // print('Quota exceeded for Firestore writes. Skipping usage recording.');
-      } else {
-        // print('Firebase error: ${e.code} - ${e.message}');
-      }
+      if (e.code == 'resource-exhausted') {}
     }
   }
 }

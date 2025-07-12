@@ -5,16 +5,17 @@ import 'package:showcaseview/showcaseview.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:url_launcher/url_launcher.dart'; // For launching URLs
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 
-import '../services/ai_service.dart';
+import '../services/ai/chat_service.dart';
 import '../services/text_storage_service.dart';
 import '../services/history_storage_service.dart';
 import '../services/usage_service.dart';
+import '../services/utils/markdown_utils.dart';
 import '../widgets/result_dialog.dart';
+import '../constants/app_strings.dart';
 
 Future<bool> isConnected() async {
   final connectivityResult = await Connectivity().checkConnectivity();
@@ -29,12 +30,9 @@ class HomeScreen extends HookWidget {
     final isProcessing = useState(false);
     final history = useState<List<Map<String, String>>>([]);
     final hex = useState<String>(''); // Initially set to null
-    // final GlobalKey _cameraKey = GlobalKey();
-    // final GlobalKey _galleryKey = GlobalKey();
-    // final GlobalKey _aboutUsKey = GlobalKey();
-    final _cameraKey = useMemoized(() => GlobalKey(), []);
-    final _galleryKey = useMemoized(() => GlobalKey(), []);
-    final _aboutUsKey = useMemoized(() => GlobalKey(), []);
+    final cameraKey = useMemoized(() => GlobalKey(), []);
+    final galleryKey = useMemoized(() => GlobalKey(), []);
+    final aboutUsKey = useMemoized(() => GlobalKey(), []);
     final isLoading = useState(true);
 
     // Automatically call getOrCreateHex when page loads
@@ -52,15 +50,15 @@ class HomeScreen extends HookWidget {
           const delay = Duration(milliseconds: 300);
 
           while (attempts < maxAttempts) {
-            final allReady = _cameraKey.currentContext != null &&
-                _galleryKey.currentContext != null &&
-                _aboutUsKey.currentContext != null;
+            final allReady = cameraKey.currentContext != null &&
+                galleryKey.currentContext != null &&
+                aboutUsKey.currentContext != null;
 
             if (context.mounted && allReady) {
               ShowCaseWidget.of(context).startShowCase([
-                _cameraKey,
-                _galleryKey,
-                _aboutUsKey,
+                cameraKey,
+                galleryKey,
+                aboutUsKey,
               ]);
               await prefs.setBool('hasShownTutorial', true);
               break;
@@ -111,110 +109,9 @@ class HomeScreen extends HookWidget {
       await prefs.setString('selected_language', newLang);
     }
 
-    final languageTexts = {
-      'English': {
-        'currentLanguage': 'Current Language',
-        'noHistory': 'No history yet. Take a photo to get started!',
-        'cameraError':
-            'Camera not supported or unavailable. Try selecting from gallery.',
-        'galleryError': 'Unable to access gallery. Please try again later.',
-        'webUnsupported':
-            'Text recognition is not supported on the web. Please use the mobile app.',
-        'takePhoto': 'Take Photo',
-        'chooseFromGallery': 'Choose from Gallery',
-        'useTestImage': 'Use Test Image',
-        'aiResult': "Ai Result",
-        'aboutUsHeading': 'About Us',
-        'aboutUsMessage': Platform.isAndroid
-            ? 'IngreSafe helps analyze product ingredients to ensure safety for pregnant or breastfeeding women. We do not collect any of your information. All information is store in your local device. If you want support us we have a Buymeacoffee. Any support will be greatly appreciate and will push us to create more useful product.'
-            : 'IngreSafe helps analyze product ingredients to ensure safety for pregnant or breastfeeding women. We do not collect any of your information. All information is store in your local device.',
-        'cameraTip': 'Take a photo and analyze the ingredient list.',
-        'galleryTip':
-            'Choose an image from the gallery and then analyze the ingredient list.',
-        'aboutUsTip': 'About Us',
-      },
-      'Traditional_Chinese': {
-        'currentLanguage': '目前語言',
-        'noHistory': '尚無歷史紀錄，請拍照開始使用！',
-        'cameraError': '相機不支援或無法使用，請嘗試從相簿選擇照片',
-        'galleryError': '無法存取相簿，請稍後再試',
-        'webUnsupported': 'Web 平台暫不支援圖片文字識別，請使用手機 App',
-        'takePhoto': '拍照',
-        'chooseFromGallery': '從相簿選擇',
-        'useTestImage': '使用測試圖片',
-        'aiResult': "AI 結果",
-        'aboutUsHeading': '關於我們',
-        'aboutUsMessage': Platform.isAndroid
-            ? 'IngreSafe 協助分析產品成分，確保對孕婦或哺乳期女性的安全。我們不會收集您的任何資訊，所有資料都儲存在您的本地設備上。如果您願意支持我們，我們有 Buy Me a Coffee 頁面。您的支持將讓我們非常感激，並激勵我們開發更多實用的產品。'
-            : 'IngreSafe 協助分析產品成分，確保對孕婦或哺乳期女性的安全。我們不會收集您的任何資訊，所有資料都儲存在您的本地設備上。',
-        'cameraTip': '請拍一張照片，並分析成分列表。',
-        'galleryTip': '請從圖庫選擇一張圖片，然後分析成分列表。',
-        'aboutUsTip': '關於我們',
-      },
-      'Japanese': {
-        'currentLanguage': '現在の言語',
-        'noHistory': '履歴がありません。写真を撮って始めましょう！',
-        'cameraError': 'カメラが使用できません。ギャラリーから選んでください。',
-        'galleryError': 'ギャラリーにアクセスできません。後でもう一度お試しください。',
-        'webUnsupported': 'Webでは文字認識がサポートされていません。モバイルアプリを使用してください。',
-        'takePhoto': '写真を撮る',
-        'chooseFromGallery': 'ギャラリーから選ぶ',
-        'useTestImage': 'テスト画像を使う',
-        'aiResult': "AI結果",
-        'aboutUsHeading': '私たちについて',
-        'aboutUsMessage': Platform.isAndroid
-            ? 'IngreSafeは、妊婦や授乳中の女性にとって安全な製品成分の分析をサポートします。私たちはあなたの情報を収集することはありません。すべてのデータはあなたのローカルデバイスに保存されます。もし私たちをサポートしたい場合は、Buy Me a Coffeeページがあります。どんなサポートも大変感謝しており、それが私たちにとって新しい有用な製品を作り続ける力となります。'
-            : 'IngreSafeは、妊婦や授乳中の女性にとって安全な製品成分の分析をサポートします。私たちはあなたの情報を収集することはありません。すべてのデータはあなたのローカルデバイスに保存されます。',
-        'cameraTip': '写真を撮って、成分リストを分析してください。',
-        'galleryTip': 'ギャラリーから画像を選んで、成分リストを分析してください。',
-        'aboutUsTip': '私たちについて',
-      },
-      'Korean': {
-        'currentLanguage': '현재 언어',
-        'noHistory': '기록이 없습니다. 사진을 찍어 시작해보세요!',
-        'cameraError': '카메라를 사용할 수 없습니다. 갤러리에서 선택해 주세요.',
-        'galleryError': '갤러리에 접근할 수 없습니다. 나중에 다시 시도해 주세요.',
-        'webUnsupported': '웹에서는 텍스트 인식이 지원되지 않습니다. 모바일 앱을 이용해 주세요.',
-        'takePhoto': '사진 찍기',
-        'chooseFromGallery': '갤러리에서 선택',
-        'useTestImage': '테스트 이미지 사용',
-        'aiResult': "AI 결과",
-        'aboutUsHeading': '우리에 대해',
-        'aboutUsMessage': Platform.isAndroid
-            ? 'IngreSafe는 임산부와 수유부를 위한 제품 성분의 안전성을 분석하는 데 도움을 줍니다. 저희는 어떠한 정보도 수집하지 않으며, 모든 데이터는 사용자의 로컬 기기에 저장됩니다. 저희를 응원하고 싶다면 Buy Me a Coffee 페이지를 통해 지원해주실 수 있습니다. 여러분의 소중한 지원은 저희에게 큰 힘이 되며, 더 유용한 제품을 만드는 데 도움이 됩니다.'
-            : 'IngreSafe는 임산부와 수유부를 위한 제품 성분의 안전성을 분석하는 데 도움을 줍니다. 저희는 어떠한 정보도 수집하지 않으며, 모든 데이터는 사용자의 로컬 기기에 저장됩니다.',
-        'cameraTip': '사진을 찍고 성분 목록을 분석해 주세요.',
-        'galleryTip': '갤러리에서 이미지를 선택한 후 성분 목록을 분석해 주세요.',
-        'aboutUsTip': '우리에 대해',
-      },
-    };
+    final languageTexts = AppStrings.homeScreenTexts;
 
-    final localizedLanguageNames = {
-      'en': {
-        'English': 'English',
-        'Traditional_Chinese': '繁體中文',
-        'Japanese': '日本語',
-        'Korean': '한국어',
-      },
-      'zh_Hant': {
-        'English': 'English',
-        'Traditional_Chinese': '繁體中文',
-        'Japanese': '日本語',
-        'Korean': '한국어',
-      },
-      'ja': {
-        'English': 'English',
-        'Traditional_Chinese': '繁體中文',
-        'Japanese': '日本語',
-        'Korean': '한국어',
-      },
-      'ko': {
-        'English': 'English',
-        'Traditional_Chinese': '繁體中文',
-        'Japanese': '日本語',
-        'Korean': '한국어',
-      },
-    };
+    final localizedLanguageNames = AppStrings.languageNames;
 
     final langCode = selectedLanguageName.value == 'English'
         ? 'en'
@@ -225,62 +122,6 @@ class HomeScreen extends HookWidget {
                 : 'ko'; // Default to Korean if nothing else matches
 
     final t = languageTexts[selectedLanguageName.value]!;
-
-    Future<void> processAssetImage(String assetPath) async {
-      if (!await isConnected()) {
-        if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-                content:
-                    Text("No internet connection. Please try again later.")),
-          );
-        }
-        return;
-      }
-
-      try {
-        if (!context.mounted) return;
-        isProcessing.value = true;
-        // Load image from assets and write to a temporary file
-        final byteData = await DefaultAssetBundle.of(context).load(assetPath);
-        final tempDir = await getTemporaryDirectory();
-        final file = File('${tempDir.path}/temp_asset.jpg');
-        await file.writeAsBytes(byteData.buffer.asUint8List());
-
-        // Call AI processing with image file
-        final aiResult = await AIService.processImageWithAI(
-            file, selectedLanguageName.value);
-        if (hex.value != '' && aiResult.status == true) {
-          ClickService.incrementUsage(hex.value); // Call the function
-        }
-
-        // Store and show the result
-        history.value = [
-          {'text': t['aiResult']!, 'analysis': aiResult.result},
-          ...history.value,
-        ];
-        await HistoryStorageService.saveHistory(history.value);
-
-        if (context.mounted) {
-          showDialog(
-            context: context,
-            builder: (context) => ResultDialog(
-              originalText: 'Asset image analyzed by AI',
-              analysis: aiResult.result,
-              selectedLanguageName: langCode,
-            ),
-          );
-        }
-      } catch (e) {
-        if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(e.toString())),
-          );
-        }
-      } finally {
-        isProcessing.value = false;
-      }
-    }
 
     Future<void> processImage(XFile? image) async {
       if (image == null) return;
@@ -301,7 +142,8 @@ class HomeScreen extends HookWidget {
         final file = File(image.path);
 
         final aiResult = await AIService.processImageWithAI(
-            file, selectedLanguageName.value);
+            file, langCode,
+            referenceText: t['reference'] ?? 'reference');
         if (hex.value != '' && aiResult.status == true) {
           ClickService.incrementUsage(hex.value); // Call the function
         }
@@ -415,31 +257,69 @@ class HomeScreen extends HookWidget {
                           borderRadius: BorderRadius.circular(10),
                         ),
                         elevation: 2,
-                        child: ListTile(
-                          title: Text(
-                            item['text']!.substring(
-                              0,
-                              item['text']!.length > 50
-                                  ? 50
-                                  : item['text']!.length,
+                        child: Stack(
+                          children: [
+                            ListTile(
+                              title: Text(
+                                item['text']!.length > 50
+                                    ? '${item['text']!.substring(0, 50)}...'
+                                    : item['text']!,
+                              ),
+                              subtitle: Text(
+                                MarkdownUtils.cleanMarkdown(item['analysis']!)
+                                            .length >
+                                        100
+                                    ? '${MarkdownUtils.cleanMarkdown(item['analysis']!).substring(0, 100)}...'
+                                    : MarkdownUtils.cleanMarkdown(
+                                        item['analysis']!),
+                              ),
+                              onTap: () => showDialog(
+                                context: context,
+                                builder: (context) => ResultDialog(
+                                  originalText: item['text']!,
+                                  analysis: item['analysis']!,
+                                  selectedLanguageName: langCode,
+                                ),
+                              ),
                             ),
-                          ),
-                          subtitle: Text(
-                            item['analysis']!.substring(
-                              0,
-                              item['analysis']!.length > 100
-                                  ? 100
-                                  : item['analysis']!.length,
+                            // 添加三點下拉選單
+                            Positioned(
+                              top: 0,
+                              right: 0,
+                              child: PopupMenuButton<String>(
+                                icon: const Icon(Icons.more_vert),
+                                offset: const Offset(0, 40), // 往下偏移 40 像素
+                                onSelected: (value) {
+                                  if (value == 'delete') {
+                                    // 刪除該卡片及其歷史記錄
+                                    final newHistory =
+                                        List<Map<String, String>>.from(
+                                            history.value);
+                                    newHistory.removeAt(index);
+                                    history.value = newHistory;
+
+                                    // 更新儲存的檔案
+                                    HistoryStorageService.saveHistory(
+                                        newHistory);
+                                  }
+                                },
+                                itemBuilder: (context) => [
+                                  PopupMenuItem<String>(
+                                    value: 'delete',
+                                    child: Row(
+                                      children: [
+                                        const Icon(Icons.delete,
+                                            color: Color.fromARGB(
+                                                255, 253, 94, 83)),
+                                        const SizedBox(width: 8),
+                                        Text(t['delete']!),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                          onTap: () => showDialog(
-                            context: context,
-                            builder: (context) => ResultDialog(
-                              originalText: item['text']!,
-                              analysis: item['analysis']!,
-                              selectedLanguageName: langCode,
-                            ),
-                          ),
+                          ],
                         ),
                       );
                     },
@@ -451,10 +331,10 @@ class HomeScreen extends HookWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Showcase(
-            key: _cameraKey,
-            // title: t['cameraTip'],
+            key: cameraKey,
             description: t['cameraTip'],
             child: FloatingActionButton(
+              heroTag: 'cameraBtn', // 添加唯一的 heroTag
               onPressed: isProcessing.value
                   ? null
                   : () async {
@@ -479,10 +359,11 @@ class HomeScreen extends HookWidget {
           ),
           const SizedBox(width: 16),
           Showcase(
-            key: _galleryKey,
+            key: galleryKey,
             // title: t['galleryTip'],
             description: t['galleryTip'],
             child: FloatingActionButton(
+              heroTag: 'galleryBtn', // 添加唯一的 heroTag
               onPressed: isProcessing.value
                   ? null
                   : () async {
@@ -506,37 +387,8 @@ class HomeScreen extends HookWidget {
             ),
           ),
           const SizedBox(width: 16),
-          //test button start
-          // FloatingActionButton(
-          //   onPressed: isProcessing.value
-          //       ? null
-          //       : () => processAssetImage('assets/images/wipes.jpg'),
-          //   tooltip: t['useTestImage'],
-          //   child: const Icon(Icons.image),
-          // ),
-          // FloatingActionButton(
-          //   child: Text("Start Tutorial"),
-          //   onPressed: () {
-          //     ShowCaseWidget.of(context).startShowCase([
-          //       _cameraKey,
-          //       _galleryKey,
-          //       _aboutUsKey,
-          //     ]);
-          //   },
-          // ),
-          // FloatingActionButton(
-          //   onPressed: () async {
-          //     final prefs = await SharedPreferences.getInstance();
-          //     // await prefs.remove('hasShownTutorial'); // This resets the flag
-          //     await prefs.remove('selected_language'); // This resets the flag
-          //   },
-          //   child: Text("Reset Tutorial"),
-          // ),
-          //test button end
-          // const SizedBox(width: 16),
           Showcase(
-            key: _aboutUsKey,
-            // title: t['aboutUsTip'],
+            key: aboutUsKey,
             description: t['aboutUsTip'],
             child: FloatingActionButton(
               heroTag: 'aboutUsBtn',

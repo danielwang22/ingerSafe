@@ -18,7 +18,10 @@ class _StartupScreenState extends State<StartupScreen> {
   Future<void> _checkLanguage() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? language = prefs.getString('selected_language');
-
+    
+    // 在異步操作後檢查 mounted 狀態
+    if (!mounted) return;
+    
     if (language == null) {
       Navigator.pushReplacementNamed(context, '/select-language');
     } else {

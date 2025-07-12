@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class LanguageSelectionScreen extends StatelessWidget {
+class LanguageSelectionScreen extends StatefulWidget {
   const LanguageSelectionScreen({super.key});
+
+  @override
+  State<LanguageSelectionScreen> createState() => _LanguageSelectionScreenState();
+}
+
+class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
 
   final Map<String, String> _displayToLanguageKey = const {
     'English': 'English',
@@ -11,12 +17,15 @@ class LanguageSelectionScreen extends StatelessWidget {
     '한국어': 'Korean',
   };
 
-  Future<void> _selectLanguage(BuildContext context, String displayLanguage) async {
+  Future<void> _selectLanguage(String displayLanguage) async {
     final langKey = _displayToLanguageKey[displayLanguage];
     if (langKey == null) return;
 
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('selected_language', langKey);
+    
+    // 在異步操作後檢查 mounted 狀態
+    if (!mounted) return;
     Navigator.pushReplacementNamed(context, '/home');
   }
 
@@ -28,7 +37,7 @@ class LanguageSelectionScreen extends StatelessWidget {
         children: _displayToLanguageKey.keys.map((displayLanguage) {
           return ListTile(
             title: Text(displayLanguage),
-            onTap: () => _selectLanguage(context, displayLanguage),
+            onTap: () => _selectLanguage(displayLanguage),
           );
         }).toList(),
       ),
