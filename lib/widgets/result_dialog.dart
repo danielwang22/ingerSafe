@@ -39,11 +39,13 @@ class ResultDialog extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    labels['analysisResult']!,
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
+                  Expanded(
+                    child: Text(
+                      originalText,
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                   IconButton(
@@ -178,6 +180,14 @@ class ResultDialog extends StatelessWidget {
                                     ? const Color(0xFF4F378B) // dark mode
                                     : const Color(0xFFEADDFF), // light mode
                             decoration: TextDecoration.none,
+                          ),
+                          horizontalRuleDecoration: BoxDecoration(
+                            border: Border(
+                              top: BorderSide(
+                                width: 0.5, // 更細的線條，從預設的 1.0 改為 0.5
+                                color: Theme.of(context).dividerColor,
+                              ),
+                            ),
                           ),
                         ),
                       ),

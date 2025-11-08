@@ -1,9 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter/gestures.dart'; // For TapGestureRecognizer
 import 'package:showcaseview/showcaseview.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:url_launcher/url_launcher.dart'; // For launching URLs
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -13,13 +11,30 @@ import '../services/ai/chat_service.dart';
 import '../services/text_storage_service.dart';
 import '../services/history_storage_service.dart';
 import '../services/usage_service.dart';
-import '../services/utils/markdown_utils.dart';
 import '../widgets/result_dialog.dart';
+import '../widgets/floating_action_buttons_widget.dart';
+import '../widgets/grouped_history_list.dart';
 import '../constants/app_strings.dart';
+import 'package:intl/intl.dart';
 
 Future<bool> isConnected() async {
   final connectivityResult = await Connectivity().checkConnectivity();
   return connectivityResult != ConnectivityResult.none;
+}
+
+String generateDailyDietTitle(String langCode) {
+  final now = DateTime.now();
+  
+  switch (langCode) {
+    case 'zh_Hant':
+      return '${now.year}年${now.month}月${now.day}日的飲食';
+    case 'ja':
+      return '${now.year}年${now.month}月${now.day}日の食事';
+    case 'ko':
+      return '${now.year}년 ${now.month}월 ${now.day}일의 식사';
+    default:
+      return DateFormat('MMMM d, yyyy Diet').format(now);
+  }
 }
 
 class HomeScreen extends HookWidget {
@@ -148,8 +163,13 @@ class HomeScreen extends HookWidget {
           ClickService.incrementUsage(hex.value); // Call the function
         }
 
+        final dailyDietTitle = generateDailyDietTitle(langCode);
         history.value = [
-          {'text': 'Image sent to AI', 'analysis': aiResult.result},
+          {
+            'text': dailyDietTitle, 
+            'analysis': aiResult.result,
+            'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
+          },
           ...history.value,
         ];
         await HistoryStorageService.saveHistory(history.value);
@@ -158,7 +178,7 @@ class HomeScreen extends HookWidget {
           showDialog(
             context: context,
             builder: (context) => ResultDialog(
-              originalText: 'Image content analyzed by AI',
+              originalText: dailyDietTitle,
               analysis: aiResult.result,
               selectedLanguageName: langCode,
             ),
@@ -244,245 +264,22 @@ class HomeScreen extends HookWidget {
         children: [
           if (isProcessing.value) const LinearProgressIndicator(),
           Expanded(
-            child: history.value.isEmpty
-                ? Center(child: Text(t['noHistory']!))
-                : ListView.builder(
-                    itemCount: history.value.length,
-                    itemBuilder: (context, index) {
-                      final item = history.value[index];
-                      return Card(
-                        margin: const EdgeInsets.symmetric(
-                            vertical: 6, horizontal: 10),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        elevation: 2,
-                        child: Stack(
-                          children: [
-                            ListTile(
-                              title: Text(
-                                item['text']!.length > 50
-                                    ? '${item['text']!.substring(0, 50)}...'
-                                    : item['text']!,
-                              ),
-                              subtitle: Text(
-                                MarkdownUtils.cleanMarkdown(item['analysis']!)
-                                            .length >
-                                        100
-                                    ? '${MarkdownUtils.cleanMarkdown(item['analysis']!).substring(0, 100)}...'
-                                    : MarkdownUtils.cleanMarkdown(
-                                        item['analysis']!),
-                              ),
-                              onTap: () => showDialog(
-                                context: context,
-                                builder: (context) => ResultDialog(
-                                  originalText: item['text']!,
-                                  analysis: item['analysis']!,
-                                  selectedLanguageName: langCode,
-                                ),
-                              ),
-                            ),
-                            // 添加三點下拉選單
-                            Positioned(
-                              top: 0,
-                              right: 0,
-                              child: PopupMenuButton<String>(
-                                icon: const Icon(Icons.more_vert),
-                                offset: const Offset(0, 40), // 往下偏移 40 像素
-                                onSelected: (value) {
-                                  if (value == 'delete') {
-                                    // 刪除該卡片及其歷史記錄
-                                    final newHistory =
-                                        List<Map<String, String>>.from(
-                                            history.value);
-                                    newHistory.removeAt(index);
-                                    history.value = newHistory;
-
-                                    // 更新儲存的檔案
-                                    HistoryStorageService.saveHistory(
-                                        newHistory);
-                                  }
-                                },
-                                itemBuilder: (context) => [
-                                  PopupMenuItem<String>(
-                                    value: 'delete',
-                                    child: Row(
-                                      children: [
-                                        const Icon(Icons.delete,
-                                            color: Color.fromARGB(
-                                                255, 253, 94, 83)),
-                                        const SizedBox(width: 8),
-                                        Text(t['delete']!),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
+            child: GroupedHistoryList(
+              history: history.value,
+              historyNotifier: history,
+              translations: t,
+              langCode: langCode,
+            ),
           ),
         ],
       ),
-      floatingActionButton: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Showcase(
-            key: cameraKey,
-            description: t['cameraTip'],
-            child: FloatingActionButton(
-              heroTag: 'cameraBtn', // 添加唯一的 heroTag
-              onPressed: isProcessing.value
-                  ? null
-                  : () async {
-                      try {
-                        final image = await ImagePicker()
-                            .pickImage(source: ImageSource.camera);
-                        await processImage(image);
-                      } catch (e) {
-                        if (context.mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(t['cameraError']!),
-                              duration: const Duration(seconds: 2),
-                            ),
-                          );
-                        }
-                      }
-                    },
-              tooltip: t['takePhoto'],
-              child: const Icon(Icons.camera_alt),
-            ),
-          ),
-          const SizedBox(width: 16),
-          Showcase(
-            key: galleryKey,
-            // title: t['galleryTip'],
-            description: t['galleryTip'],
-            child: FloatingActionButton(
-              heroTag: 'galleryBtn', // 添加唯一的 heroTag
-              onPressed: isProcessing.value
-                  ? null
-                  : () async {
-                      try {
-                        final image = await ImagePicker()
-                            .pickImage(source: ImageSource.gallery);
-                        await processImage(image);
-                      } catch (e) {
-                        if (context.mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(t['galleryError']!),
-                              duration: const Duration(seconds: 2),
-                            ),
-                          );
-                        }
-                      }
-                    },
-              tooltip: t['chooseFromGallery'],
-              child: const Icon(Icons.photo_library),
-            ),
-          ),
-          const SizedBox(width: 16),
-          Showcase(
-            key: aboutUsKey,
-            description: t['aboutUsTip'],
-            child: FloatingActionButton(
-              heroTag: 'aboutUsBtn',
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    elevation: 24,
-                    insetPadding:
-                        EdgeInsets.symmetric(horizontal: 40, vertical: 24),
-                    titlePadding: EdgeInsets.fromLTRB(24, 24, 8, 0),
-                    contentPadding: EdgeInsets.fromLTRB(24, 20, 24, 24),
-                    title: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: Text(
-                            t['aboutUsHeading']!,
-                            style: TextStyle(
-                              fontSize: 22,
-                              fontWeight: FontWeight.bold,
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
-                          ),
-                        ),
-                        IconButton(
-                          icon: Icon(Icons.close, size: 28),
-                          tooltip: 'Close',
-                          onPressed: () => Navigator.of(context).pop(),
-                          splashRadius: 24,
-                        ),
-                      ],
-                    ),
-                    content: SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.3,
-                      width: MediaQuery.of(context).size.width * 0.8,
-                      child: SingleChildScrollView(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              t['aboutUsMessage']!,
-                              style: TextStyle(
-                                fontSize: 16,
-                                height: 1.4,
-                              ),
-                            ),
-                            if (Platform.isAndroid) ...[
-                              const SizedBox(height: 16),
-                              RichText(
-                                text: TextSpan(
-                                  children: [
-                                    TextSpan(
-                                      text: 'Buy me a coffee',
-                                      style: TextStyle(
-                                        color: Colors.blueAccent,
-                                        decoration: TextDecoration.underline,
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 16,
-                                      ),
-                                      recognizer: TapGestureRecognizer()
-                                        ..onTap = () async {
-                                          final url = Uri.parse(
-                                              'https://buymeacoffee.com/ingresafe');
-                                          try {
-                                            if (!await launchUrl(url,
-                                                mode: LaunchMode
-                                                    .externalApplication)) {
-                                              // print('Could not launch $url');
-                                            }
-                                          } catch (e) {
-                                            // print('Error launching URL: $e');
-                                          }
-                                        },
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                );
-              },
-              tooltip: 'About Us',
-              child: const Icon(Icons.info_outline),
-            ),
-          ),
-        ],
+      floatingActionButton: FloatingActionButtonsWidget(
+        cameraKey: cameraKey,
+        galleryKey: galleryKey,
+        aboutUsKey: aboutUsKey,
+        translations: t,
+        isProcessing: isProcessing.value,
+        processImage: processImage,
       ),
     );
   }

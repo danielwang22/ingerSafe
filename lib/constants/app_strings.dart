@@ -53,7 +53,8 @@ class AppStrings {
           'Choose an image from the gallery and then analyze the ingredient list.',
       'aboutUsTip': 'About Us',
       'delete': 'Delete',
-      'reference': 'Reference'
+      'reference': 'Reference',
+      'dailyDiet': 'Daily Diet'
     },
     'Traditional_Chinese': {
       'currentLanguage': '目前語言',
@@ -73,7 +74,8 @@ class AppStrings {
       'galleryTip': '請從圖庫選擇一張圖片，然後分析成分列表。',
       'aboutUsTip': '關於我們',
       'delete': '刪除',
-      'reference': '參考資料'
+      'reference': '參考資料',
+      'dailyDiet': '該月該日的飲食'
     },
     'Japanese': {
       'currentLanguage': '現在の言語',
@@ -93,7 +95,8 @@ class AppStrings {
       'galleryTip': 'ギャラリーから画像を選んで、成分リストを分析してください。',
       'aboutUsTip': '私たちについて',
       'delete': '削除',
-      'reference': '参考資料'
+      'reference': '参考資料',
+      'dailyDiet': 'その月その日の食事'
     },
     'Korean': {
       'currentLanguage': '현재 언어',
@@ -113,7 +116,8 @@ class AppStrings {
       'galleryTip': '갤러리에서 이미지를 선택한 후 성분 목록을 분석해 주세요.',
       'aboutUsTip': '우리에 대해',
       'delete': '삭제',
-      'reference': '참고 자료'
+      'reference': '참고 자료',
+      'dailyDiet': '그 달 그 날의 식사'
     },
   };
 
