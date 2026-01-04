@@ -25,6 +25,8 @@ class ResultDialog extends StatelessWidget {
       'zh_Hant' => localizedLabels['zh_Hant']!,
       'ja' => localizedLabels['ja']!,
       'ko' => localizedLabels['ko']!,
+      'th' => localizedLabels['th']!,
+      'vi' => localizedLabels['vi']!,
       _ => localizedLabels['en']!,
     };
 

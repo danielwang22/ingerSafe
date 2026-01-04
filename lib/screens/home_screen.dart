@@ -24,7 +24,7 @@ Future<bool> isConnected() async {
 
 String generateDailyDietTitle(String langCode) {
   final now = DateTime.now();
-  
+
   switch (langCode) {
     case 'zh_Hant':
       return '${now.year}年${now.month}月${now.day}日的飲食';
@@ -96,6 +96,8 @@ class HomeScreen extends HookWidget {
       'Traditional_Chinese': TextRecognitionScript.chinese,
       'Japanese': TextRecognitionScript.japanese,
       'Korean': TextRecognitionScript.korean,
+      'Thai': TextRecognitionScript.latin,
+      'Vietnamese': TextRecognitionScript.latin,
     };
     final selectedLanguage =
         useState<TextRecognitionScript>(TextRecognitionScript.chinese);
@@ -128,13 +130,16 @@ class HomeScreen extends HookWidget {
 
     final localizedLanguageNames = AppStrings.languageNames;
 
-    final langCode = selectedLanguageName.value == 'English'
-        ? 'en'
-        : selectedLanguageName.value == 'Traditional_Chinese'
-            ? 'zh_Hant'
-            : selectedLanguageName.value == 'Japanese'
-                ? 'ja'
-                : 'ko'; // Default to Korean if nothing else matches
+    final langCodeByLanguageName = {
+      'English': 'en',
+      'Traditional_Chinese': 'zh_Hant',
+      'Japanese': 'ja',
+      'Korean': 'ko',
+      'Thai': 'th',
+      'Vietnamese': 'vi',
+    };
+
+    final langCode = langCodeByLanguageName[selectedLanguageName.value] ?? 'en';
 
     final t = languageTexts[selectedLanguageName.value]!;
 
@@ -156,8 +161,7 @@ class HomeScreen extends HookWidget {
         isProcessing.value = true;
         final file = File(image.path);
 
-        final aiResult = await AIService.processImageWithAI(
-            file, langCode,
+        final aiResult = await AIService.processImageWithAI(file, langCode,
             referenceText: t['reference'] ?? 'reference');
         if (hex.value != '' && aiResult.status == true) {
           ClickService.incrementUsage(hex.value); // Call the function
@@ -166,7 +170,7 @@ class HomeScreen extends HookWidget {
         final dailyDietTitle = generateDailyDietTitle(langCode);
         history.value = [
           {
-            'text': dailyDietTitle, 
+            'text': dailyDietTitle,
             'analysis': aiResult.result,
             'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
           },
@@ -209,15 +213,8 @@ class HomeScreen extends HookWidget {
                 borderRadius: BorderRadius.circular(12),
                 selectedItemBuilder: (BuildContext context) {
                   return supportedLanguages.entries.map((entry) {
-                    final langText = localizedLanguageNames[
-                            selectedLanguageName.value == 'English'
-                                ? 'en'
-                                : selectedLanguageName.value ==
-                                        'Traditional_Chinese'
-                                    ? 'zh_Hant'
-                                    : selectedLanguageName.value == 'Japanese'
-                                        ? 'ja'
-                                        : 'ko']?[entry.key] ??
+                    final langText = localizedLanguageNames[langCode]
+                            ?[entry.key] ??
                         entry.key;
 
                     return Row(
@@ -232,14 +229,7 @@ class HomeScreen extends HookWidget {
                   }).toList();
                 },
                 items: supportedLanguages.entries.map((entry) {
-                  final localizedNames = localizedLanguageNames[
-                      selectedLanguageName.value == 'English'
-                          ? 'en'
-                          : selectedLanguageName.value == 'Traditional_Chinese'
-                              ? 'zh_Hant'
-                              : selectedLanguageName.value == 'Japanese'
-                                  ? 'ja'
-                                  : 'ko']!;
+                  final localizedNames = localizedLanguageNames[langCode]!;
                   return DropdownMenuItem<TextRecognitionScript>(
                     value: entry.value,
                     child: Text(localizedNames[entry.key] ?? entry.key),

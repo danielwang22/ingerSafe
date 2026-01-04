@@ -5,16 +5,18 @@ class LanguageSelectionScreen extends StatefulWidget {
   const LanguageSelectionScreen({super.key});
 
   @override
-  State<LanguageSelectionScreen> createState() => _LanguageSelectionScreenState();
+  State<LanguageSelectionScreen> createState() =>
+      _LanguageSelectionScreenState();
 }
 
 class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
-
   final Map<String, String> _displayToLanguageKey = const {
     'English': 'English',
     '繁體中文': 'Traditional_Chinese',
     '日本語': 'Japanese',
     '한국어': 'Korean',
+    'ไทย': 'Thai',
+    'Tiếng Việt': 'Vietnamese',
   };
 
   Future<void> _selectLanguage(String displayLanguage) async {
@@ -23,7 +25,7 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
 
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('selected_language', langKey);
-    
+
     // 在異步操作後檢查 mounted 狀態
     if (!mounted) return;
     Navigator.pushReplacementNamed(context, '/home');
