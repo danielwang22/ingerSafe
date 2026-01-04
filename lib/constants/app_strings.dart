@@ -9,24 +9,48 @@ class AppStrings {
       'Traditional_Chinese': '繁體中文',
       'Japanese': '日本語',
       'Korean': '한국어',
+      'Thai': 'Thai',
+      'Vietnamese': 'Vietnamese',
     },
     'zh_Hant': {
       'English': 'English',
       'Traditional_Chinese': '繁體中文',
       'Japanese': '日本語',
       'Korean': '한국어',
+      'Thai': '泰文',
+      'Vietnamese': '越南文',
     },
     'ja': {
       'English': 'English',
       'Traditional_Chinese': '繁體中文',
       'Japanese': '日本語',
       'Korean': '한국어',
+      'Thai': 'タイ語',
+      'Vietnamese': 'ベトナム語',
     },
     'ko': {
       'English': 'English',
       'Traditional_Chinese': '繁體中文',
       'Japanese': '日本語',
       'Korean': '한국어',
+      'Thai': '태국어',
+      'Vietnamese': '베트남어',
+    },
+    'th': {
+      'English': 'English',
+      'Traditional_Chinese': '繁體中文',
+      'Japanese': '日本語',
+      'Korean': '한국어',
+      'Thai': 'ไทย',
+      'Vietnamese': 'Tiếng Việt',
+    },
+    'vi': {
+      'English': 'English',
+      'Traditional_Chinese': '繁體中文',
+      'Japanese': '日本語',
+      'Korean': '한국어',
+      'Thai': 'Tiếng Thái',
+      'Vietnamese': 'Tiếng Việt',
     },
   };
 
@@ -119,6 +143,50 @@ class AppStrings {
       'reference': '참고 자료',
       'dailyDiet': '그 달 그 날의 식사'
     },
+    'Thai': {
+      'currentLanguage': 'ภาษาปัจจุบัน',
+      'noHistory': 'ยังไม่มีประวัติ ลองถ่ายรูปเพื่อเริ่มต้น!',
+      'cameraError': 'ไม่รองรับกล้องหรือไม่สามารถใช้งานได้ ลองเลือกจากแกลเลอรี',
+      'galleryError': 'ไม่สามารถเข้าถึงแกลเลอรีได้ โปรดลองอีกครั้งในภายหลัง',
+      'webUnsupported': 'ยังไม่รองรับการรู้จำข้อความบนเว็บ โปรดใช้แอปบนมือถือ',
+      'takePhoto': 'ถ่ายรูป',
+      'chooseFromGallery': 'เลือกจากแกลเลอรี',
+      'useTestImage': 'ใช้รูปทดสอบ',
+      'aiResult': 'ผลลัพธ์ AI',
+      'aboutUsHeading': 'เกี่ยวกับเรา',
+      'aboutUsMessage': Platform.isAndroid
+          ? 'IngreSafe ช่วยวิเคราะห์ส่วนผสมของผลิตภัณฑ์เพื่อให้แน่ใจว่าปลอดภัยสำหรับหญิงตั้งครรภ์หรือให้นมบุตร เราไม่เก็บข้อมูลใด ๆ ของคุณ ข้อมูลทั้งหมดจะถูกเก็บไว้ในอุปกรณ์ของคุณ หากคุณต้องการสนับสนุนเรา เรามีหน้า Buy Me a Coffee ทุกการสนับสนุนมีความหมายและช่วยให้เราพัฒนาผลิตภัณฑ์ที่มีประโยชน์มากขึ้น'
+          : 'IngreSafe ช่วยวิเคราะห์ส่วนผสมของผลิตภัณฑ์เพื่อให้แน่ใจว่าปลอดภัยสำหรับหญิงตั้งครรภ์หรือให้นมบุตร เราไม่เก็บข้อมูลใด ๆ ของคุณ ข้อมูลทั้งหมดจะถูกเก็บไว้ในอุปกรณ์ของคุณ',
+      'cameraTip': 'ถ่ายรูปแล้ววิเคราะห์รายการส่วนผสม',
+      'galleryTip': 'เลือกรูปจากแกลเลอรี แล้ววิเคราะห์รายการส่วนผสม',
+      'aboutUsTip': 'เกี่ยวกับเรา',
+      'delete': 'ลบ',
+      'reference': 'อ้างอิง',
+      'dailyDiet': 'อาหารประจำวัน'
+    },
+    'Vietnamese': {
+      'currentLanguage': 'Ngôn ngữ hiện tại',
+      'noHistory': 'Chưa có lịch sử. Hãy chụp ảnh để bắt đầu!',
+      'cameraError':
+          'Không hỗ trợ camera hoặc không khả dụng. Hãy thử chọn từ thư viện.',
+      'galleryError': 'Không thể truy cập thư viện. Vui lòng thử lại sau.',
+      'webUnsupported':
+          'Nền tảng web chưa hỗ trợ nhận dạng văn bản. Vui lòng dùng ứng dụng di động.',
+      'takePhoto': 'Chụp ảnh',
+      'chooseFromGallery': 'Chọn từ thư viện',
+      'useTestImage': 'Dùng ảnh thử',
+      'aiResult': 'Kết quả AI',
+      'aboutUsHeading': 'Về chúng tôi',
+      'aboutUsMessage': Platform.isAndroid
+          ? 'IngreSafe giúp phân tích thành phần sản phẩm để đảm bảo an toàn cho phụ nữ mang thai hoặc đang cho con bú. Chúng tôi không thu thập bất kỳ thông tin nào của bạn. Tất cả dữ liệu được lưu trên thiết bị của bạn. Nếu bạn muốn ủng hộ chúng tôi, hãy ghé trang Buy Me a Coffee. Sự ủng hộ của bạn sẽ giúp chúng tôi tạo ra nhiều sản phẩm hữu ích hơn.'
+          : 'IngreSafe giúp phân tích thành phần sản phẩm để đảm bảo an toàn cho phụ nữ mang thai hoặc đang cho con bú. Chúng tôi không thu thập bất kỳ thông tin nào của bạn. Tất cả dữ liệu được lưu trên thiết bị của bạn.',
+      'cameraTip': 'Chụp ảnh và phân tích danh sách thành phần.',
+      'galleryTip': 'Chọn ảnh từ thư viện rồi phân tích danh sách thành phần.',
+      'aboutUsTip': 'Về chúng tôi',
+      'delete': 'Xóa',
+      'reference': 'Tham khảo',
+      'dailyDiet': 'Chế độ ăn hằng ngày'
+    },
   };
 
   /// AI 分析提示詞
@@ -155,6 +223,22 @@ class AppStrings {
       - **물질 이름** – 잠재적인 영향에 대한 간단한 설명.
       "한국어" 형식으로 응답해 주세요. 이미지에 표시되지 않은 정보를 임의로 생성하지 마세요. 위험하거나 검증되지 않은 조언은 제공하지 마세요.      
     """,
+    'th': """
+      คุณเป็นผู้ช่วยวิเคราะห์ด้านสุขภาพระดับมืออาชีพ โปรดวิเคราะห์ส่วนผสมหรือสารที่สามารถอ่านได้จากภาพ และอธิบายผลกระทบด้านลบที่อาจเกิดขึ้นกับหญิงตั้งครรภ์หรือให้นมบุตร หากข้อความในภาพไม่ชัดเจนหรือไม่ครบถ้วน ให้พยายามดึงข้อมูลที่เป็นประโยชน์ให้มากที่สุด
+      อันดับแรก โปรดระบุว่าผลิตภัณฑ์โดยรวมดูอันตรายหรือไม่
+      โปรด **เรียงสารที่อันตรายหรือมีความเสี่ยงสูงก่อน** ตามด้วยสารที่มี **ความกังวลเล็กน้อยหรือความเสี่ยงต่ำ**
+      ส่งผลลัพธ์เป็นรายการหัวข้อย่อยในรูปแบบ:
+      - **สาร/ส่วนผสม** – คำอธิบายสั้น ๆ เกี่ยวกับผลกระทบที่เป็นไปได้
+      โปรดตอบเป็นภาษา "ไทย" ห้ามแต่งข้อมูลที่ไม่เห็นหรืออ่านได้จากภาพ และห้ามให้คำแนะนำที่อันตรายหรือยังไม่ได้รับการยืนยัน
+    """,
+    'vi': """
+      Bạn là trợ lý phân tích sức khỏe chuyên nghiệp. Hãy phân tích các thành phần/chất có thể nhận diện trong ảnh và giải thích các tác động tiêu cực tiềm ẩn đối với phụ nữ mang thai hoặc đang cho con bú. Nếu văn bản trong ảnh bị thiếu hoặc mờ, hãy cố gắng trích xuất thông tin hữu ích nhất có thể.
+      Trước tiên, hãy cho biết sản phẩm nhìn chung có vẻ nguy hiểm hay không.
+      Hãy liệt kê **các chất nguy hiểm hoặc rủi ro cao trước**, sau đó là các chất có **mức độ lo ngại nhỏ hoặc rủi ro thấp**.
+      Trả về kết quả dạng danh sách gạch đầu dòng theo định dạng:
+      - **Chất/Thành phần** – Giải thích ngắn về tác động tiềm ẩn.
+      Vui lòng trả lời bằng "Tiếng Việt". Không bịa thông tin không nhìn thấy/không thể nhận diện từ ảnh. Không đưa ra lời khuyên nguy hiểm hoặc chưa được kiểm chứng.
+    """,
   };
 
   static final Map<String, String> imagePrompts = {
@@ -163,6 +247,10 @@ class AppStrings {
     'zh_Hant': '請分析此食物食品，是否對懷孕或哺乳女性可能產生的負面影響',
     'ja': 'この食品が妊娠中または授乳中の女性に悪影響を及ぼす可能性があるかどうかを分析してください。',
     'ko': '이 식품이 임산부 또는 수유 중인 여성에게 부정적인 영향을 줄 가능성이 있는지 분석해 주세요.',
+    'th':
+        'โปรดวิเคราะห์ว่าอาหาร/ผลิตภัณฑ์นี้อาจส่งผลเสียต่อหญิงตั้งครรภ์หรือให้นมบุตรหรือไม่',
+    'vi':
+        'Vui lòng phân tích xem thực phẩm/sản phẩm này có thể gây ảnh hưởng tiêu cực đến phụ nữ mang thai hoặc đang cho con bú hay không.',
   };
 
   /// 結果對話框使用的文字常數
@@ -213,6 +301,30 @@ class AppStrings {
       'copyAnalysis': '분석 결과가 복사되었습니다',
       'disclaimer':
           '이 앱은 성분에 대한 정보를 확인하는 데 도움을 줍니다. 항상 의사와 상담하세요. 이 앱은 의학적 조언을 제공하지 않습니다.',
+    },
+    'th': {
+      'analysisResult': 'ผลการวิเคราะห์',
+      'noHarmfulIngredients': 'ไม่พบส่วนผสมที่เป็นอันตราย',
+      'potentiallyHarmfulIngredients': 'ส่วนผสมที่อาจเป็นอันตราย:',
+      'originalText': 'ข้อความต้นฉบับ',
+      'aiAnalysis': 'การวิเคราะห์ AI',
+      'copyText': 'คัดลอก',
+      'copyOriginal': 'คัดลอกข้อความต้นฉบับแล้ว',
+      'copyAnalysis': 'คัดลอกผลการวิเคราะห์แล้ว',
+      'disclaimer':
+          'แอปนี้ช่วยค้นหาข้อมูลเกี่ยวกับส่วนผสม โปรดปรึกษาแพทย์เสมอ แอปนี้ไม่ได้ให้คำแนะนำทางการแพทย์',
+    },
+    'vi': {
+      'analysisResult': 'Kết quả phân tích',
+      'noHarmfulIngredients': 'Không phát hiện thành phần có hại.',
+      'potentiallyHarmfulIngredients': 'Các thành phần có thể gây hại:',
+      'originalText': 'Văn bản gốc',
+      'aiAnalysis': 'Phân tích AI',
+      'copyText': 'Sao chép',
+      'copyOriginal': 'Đã sao chép văn bản gốc',
+      'copyAnalysis': 'Đã sao chép kết quả phân tích',
+      'disclaimer':
+          'Ứng dụng này giúp bạn tra cứu thông tin về thành phần. Hãy luôn tham khảo ý kiến bác sĩ. Ứng dụng này không cung cấp lời khuyên y tế.',
     },
   };
 }
