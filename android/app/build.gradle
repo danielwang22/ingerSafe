@@ -11,7 +11,15 @@ plugins {
 android {
     namespace = "com.afternoonteacoders.ingresafe"
     compileSdk = 35
-    ndkVersion = "26.1.10909125"
+    // Use NDK r28 or higher
+    ndkVersion "28.0.12433566"
+
+    packagingOptions {
+        jniLibs {
+            // Required to ensure native libs are uncompressed and 16 KB aligned
+            useLegacyPackaging = true
+        }
+    }
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -26,7 +34,7 @@ android {
         applicationId = "com.afternoonteacoders.ingresafe"
         minSdk = 24
         targetSdk = 35
-        versionCode = 9
+        versionCode = 12
         versionName = "1.0.2"
     }
 
