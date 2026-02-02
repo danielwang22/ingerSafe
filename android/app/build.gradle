@@ -10,7 +10,7 @@ plugins {
 
 android {
     namespace = "com.afternoonteacoders.ingresafe"
-    compileSdk = 35
+    compileSdk = 36
     ndkVersion = "26.1.10909125"
 
     compileOptions {
@@ -20,6 +20,10 @@ android {
 
     kotlinOptions {
         jvmTarget = '11'
+    }
+
+    buildFeatures {
+        buildConfig = true
     }
 
     defaultConfig {
