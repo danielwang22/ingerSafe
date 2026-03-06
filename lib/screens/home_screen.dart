@@ -5,7 +5,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 
 import '../services/ai/chat_service.dart';
 import '../services/text_storage_service.dart';
@@ -19,7 +18,8 @@ import 'package:intl/intl.dart';
 
 Future<bool> isConnected() async {
   final connectivityResult = await Connectivity().checkConnectivity();
-  return connectivityResult != ConnectivityResult.none;
+  // ignore: unrelated_type_equality_checks
+  return !connectivityResult.contains(ConnectivityResult.none);
 }
 
 String generateDailyDietTitle(String langCode) {
@@ -91,16 +91,14 @@ class HomeScreen extends HookWidget {
       return null;
     }, []);
 
-    final supportedLanguages = {
-      'English': TextRecognitionScript.latin,
-      'Traditional_Chinese': TextRecognitionScript.chinese,
-      'Japanese': TextRecognitionScript.japanese,
-      'Korean': TextRecognitionScript.korean,
-      'Thai': TextRecognitionScript.latin,
-      'Vietnamese': TextRecognitionScript.latin,
-    };
-    final selectedLanguage =
-        useState<TextRecognitionScript>(TextRecognitionScript.chinese);
+    final supportedLanguages = [
+      'English',
+      'Traditional_Chinese',
+      'Japanese',
+      'Korean',
+      'Thai',
+      'Vietnamese',
+    ];
     final selectedLanguageName = useState<String>('Traditional_Chinese');
 
     useEffect(() {
@@ -108,9 +106,8 @@ class HomeScreen extends HookWidget {
         SharedPreferences prefs = await SharedPreferences.getInstance();
         String? savedLang = prefs.getString('selected_language');
 
-        if (savedLang != null && supportedLanguages.containsKey(savedLang)) {
+        if (savedLang != null && supportedLanguages.contains(savedLang)) {
           selectedLanguageName.value = savedLang;
-          selectedLanguage.value = supportedLanguages[savedLang]!;
         }
         isLoading.value = false; // Done loading
       }();
@@ -118,9 +115,8 @@ class HomeScreen extends HookWidget {
     }, []);
 
     Future<void> updateLanguage(String newLang) async {
-      if (!supportedLanguages.containsKey(newLang)) return;
+      if (!supportedLanguages.contains(newLang)) return;
       selectedLanguageName.value = newLang;
-      selectedLanguage.value = supportedLanguages[newLang]!;
 
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setString('selected_language', newLang);
@@ -206,16 +202,16 @@ class HomeScreen extends HookWidget {
           Padding(
             padding: const EdgeInsets.only(right: 12.0),
             child: DropdownButtonHideUnderline(
-              child: DropdownButton<TextRecognitionScript>(
-                value: selectedLanguage.value,
+              child: DropdownButton<String>(
+                value: selectedLanguageName.value,
                 icon: const Icon(Icons.language),
                 alignment: Alignment.center,
                 borderRadius: BorderRadius.circular(12),
                 selectedItemBuilder: (BuildContext context) {
-                  return supportedLanguages.entries.map((entry) {
+                  return supportedLanguages.map((langName) {
                     final langText = localizedLanguageNames[langCode]
-                            ?[entry.key] ??
-                        entry.key;
+                            ?[langName] ??
+                        langName;
 
                     return Row(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -228,21 +224,16 @@ class HomeScreen extends HookWidget {
                     );
                   }).toList();
                 },
-                items: supportedLanguages.entries.map((entry) {
+                items: supportedLanguages.map((langName) {
                   final localizedNames = localizedLanguageNames[langCode]!;
-                  return DropdownMenuItem<TextRecognitionScript>(
-                    value: entry.value,
-                    child: Text(localizedNames[entry.key] ?? entry.key),
+                  return DropdownMenuItem<String>(
+                    value: langName,
+                    child: Text(localizedNames[langName] ?? langName),
                   );
                 }).toList(),
-                onChanged: (newLang) {
-                  if (newLang != null) {
-                    selectedLanguage.value = newLang;
-                    final langName = supportedLanguages.entries
-                        .firstWhere((entry) => entry.value == newLang)
-                        .key;
-                    updateLanguage(langName);
-                    selectedLanguageName.value = langName;
+                onChanged: (newLangName) {
+                  if (newLangName != null) {
+                    updateLanguage(newLangName);
                   }
                 },
               ),
