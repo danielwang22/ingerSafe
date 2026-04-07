@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import '../../utils/date_utils.dart';
 import 'types/response.dart';
 
@@ -156,7 +155,6 @@ class PerplexityFormatter {
         referenceText: referenceText,
       );
     } catch (e) {
-      debugPrint('格式化 Perplexity 回應時發生錯誤: $e');
       // 發生錯誤時，返回原始內容或錯誤訊息
       return _getDefaultErrorContent(responseData);
     }

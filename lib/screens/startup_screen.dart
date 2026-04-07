@@ -12,27 +12,32 @@ class _StartupScreenState extends State<StartupScreen> {
   @override
   void initState() {
     super.initState();
-    _checkLanguage();
+    _route();
   }
 
-  Future<void> _checkLanguage() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? language = prefs.getString('selected_language');
-    
-    // 在異步操作後檢查 mounted 狀態
+  Future<void> _route() async {
+    final prefs = await SharedPreferences.getInstance();
+    final hasSelected = prefs.getBool('language_selected') ?? false;
+
     if (!mounted) return;
-    
-    if (language == null) {
-      Navigator.pushReplacementNamed(context, '/select-language');
+
+    if (hasSelected) {
+      Navigator.pushReplacementNamed(context, '/reports');
     } else {
-      Navigator.pushReplacementNamed(context, '/home');
+      Navigator.pushReplacementNamed(context, '/select-language');
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(child: CircularProgressIndicator()),
+    return Scaffold(
+      body: Center(
+        child: Image.asset(
+          'assets/icon/logo.png',
+          width: 120,
+          height: 120,
+        ),
+      ),
     );
   }
 }

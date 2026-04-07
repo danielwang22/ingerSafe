@@ -33,6 +33,11 @@
 	<true/>
 	<key>NSCameraUsageDescription</key>
 	<string>此應用需要訪問相機來拍攝照片進行文字識別</string>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>

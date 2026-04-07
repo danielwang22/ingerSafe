@@ -1,44 +1,45 @@
-// hex_storage.dart
 import 'dart:io';
 import 'dart:math';
 import 'package:path_provider/path_provider.dart';
+import 'interfaces/i_device_id_service.dart';
 
-Future<String> generateHex() async {
-  final random = Random();
-  const chars = '0123456789ABCDEF';
-  String hex = List.generate(8, (index) => chars[random.nextInt(chars.length)]).join();
-  return hex;
-}
+class DeviceIdService implements IDeviceIdService {
+  static final DeviceIdService instance = DeviceIdService._();
+  DeviceIdService._();
 
-Future<String?> getHexFromFile() async {
-  try {
-    final directory = await getApplicationDocumentsDirectory();
-    final file = File('${directory.path}/hex_string.txt');
-    if (await file.exists()) {
-      return await file.readAsString();
+  Future<String> _generateHex() async {
+    final random = Random();
+    const chars = '0123456789ABCDEF';
+    return List.generate(8, (index) => chars[random.nextInt(chars.length)])
+        .join();
+  }
+
+  Future<String?> _getHexFromFile() async {
+    try {
+      final directory = await getApplicationDocumentsDirectory();
+      final file = File('${directory.path}/hex_string.txt');
+      if (await file.exists()) {
+        return await file.readAsString();
+      }
+    } catch (_) {}
+    return null;
+  }
+
+  Future<void> _saveHexToFile(String hex) async {
+    try {
+      final directory = await getApplicationDocumentsDirectory();
+      final file = File('${directory.path}/hex_string.txt');
+      await file.writeAsString(hex);
+    } catch (_) {}
+  }
+
+  @override
+  Future<String> getOrCreateHex() async {
+    String? hex = await _getHexFromFile();
+    if (hex == null) {
+      hex = await _generateHex();
+      await _saveHexToFile(hex);
     }
-  } catch (e) {
-    // print('Error reading file: $e');
+    return hex;
   }
-  return null;
-}
-
-Future<void> saveHexToFile(String hex) async {
-  try {
-    final directory = await getApplicationDocumentsDirectory();
-    final file = File('${directory.path}/hex_string.txt');
-    await file.writeAsString(hex);
-  } catch (e) {
-    // print('Error writing to file: $e');
-  }
-}
-
-Future<String> getOrCreateHex() async {
-  String? hex = await getHexFromFile();
-  if (hex == null) {
-    // If the file doesn't exist or hex is null, generate a new one
-    hex = await generateHex();
-    await saveHexToFile(hex);
-  }
-  return hex;
 }

@@ -63,6 +63,25 @@ windows/CMakeFiles
 Thumbs.db
 
 # Test
+test/assets
+test/log
 test.*
 .env
 Design
+.metadata
+devtools_options.yaml
+.mcp.json
+*.jks
+
+# Security - Android release keys
+*.jks
+*.keystore
+key.properties
+
+# Security scan results (OWASP Mobile Security Checker)
+owasp_*.json
+
+# other
+.windsurf/
+.claude/
+android/build/

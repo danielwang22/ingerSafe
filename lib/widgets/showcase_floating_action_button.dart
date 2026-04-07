@@ -24,6 +24,8 @@ class ShowcaseFloatingActionButton extends StatelessWidget {
     return Showcase(
       key: showcaseKey,
       description: description,
+      tooltipPadding: const EdgeInsets.all(20),
+      descTextStyle: const TextStyle(fontSize: 16),
       child: FloatingActionButton(
         heroTag: heroTag,
         onPressed: onPressed,

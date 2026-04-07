@@ -1,25 +1,31 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
+import 'interfaces/i_history_storage.dart';
 
-class HistoryStorageService {
-  static Future<String> _getLocalPath() async {
+class HistoryStorageService implements IHistoryStorage {
+  static final HistoryStorageService instance = HistoryStorageService._();
+  HistoryStorageService._();
+
+  Future<String> _getLocalPath() async {
     final directory = await getApplicationDocumentsDirectory();
     return directory.path;
   }
 
-  static Future<File> _getLocalFile() async {
+  Future<File> _getLocalFile() async {
     final path = await _getLocalPath();
     return File('$path/history.json');
   }
 
-  static Future<void> saveHistory(List<Map<String, String>> history) async {
+  @override
+  Future<void> saveHistory(List<Map<String, String>> history) async {
     final file = await _getLocalFile();
     final jsonString = jsonEncode(history);
     await file.writeAsString(jsonString);
   }
 
-  static Future<List<Map<String, String>>> loadHistory() async {
+  @override
+  Future<List<Map<String, String>>> loadHistory() async {
     try {
       final file = await _getLocalFile();
       if (!await file.exists()) return [];

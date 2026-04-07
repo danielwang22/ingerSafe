@@ -1,8 +1,12 @@
-// lib/services/usage_service.dart
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'interfaces/i_usage_service.dart';
 
-class ClickService {
-  static Future<void> incrementUsage(String hexId) async {
+class ClickService implements IUsageService {
+  static final ClickService instance = ClickService._();
+  ClickService._();
+
+  @override
+  Future<void> incrementUsage(String hexId) async {
     final docRef = FirebaseFirestore.instance.collection('clicks').doc(hexId);
 
     try {
