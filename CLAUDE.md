@@ -109,7 +109,7 @@ For tests, override any of these with `ProviderScope(overrides: [aiServiceProvid
 - `removeEphemeral(id)` — memory-only remove
 
 **`lib/providers/theme_provider.dart`** — `AsyncNotifier<ThemeMode>`  
-Loads from `SharedPreferences` on `build()`. `setThemeMode()` updates state immediately then persists.
+Loads from `SharedPreferences` on `build()`. Defaults to `ThemeMode.system` if no preference saved. `setThemeMode()` updates state immediately then persists.
 
 **`lib/providers/language_provider.dart`** — `AsyncNotifier<String>`  
 Loads `selected_language` from `SharedPreferences`. `setLanguage()` updates state immediately then persists.
@@ -263,6 +263,7 @@ ReportStorageService.resolveImagePath(storedPath)
 |-----|---------|------|
 | `language_selected` | Language preference flag | Boolean |
 | `selected_language` | Active language code | String |
+| `theme_mode` | Theme preference (`ThemeMode.toString()`) | String |
 | `tutorial_completed` | Tutorial completion state | Boolean |
 | `hasShownTutorial` | Home screen tutorial flag | Boolean |
 | `safety_warning_shown` | Warning dismissal state | Boolean |
@@ -278,7 +279,15 @@ ReportStorageService.resolveImagePath(storedPath)
 - `AppTheme` in `lib/theme/app_theme.dart` defines colors, text styles, and `RiskLevelConfig` per risk level
 - Primary color: `#4B9B79` (green), Warning: `#F5A623`, Danger: `#D63333`
 - Typography: Google Fonts (Nunito)
-- Full dark mode support
+- Both `AppTheme.lightTheme` and `AppTheme.darkTheme` are defined; `MyApp` passes both to `MaterialApp`
+
+**RiskLevelConfig Dark Variants:** `RiskLevelConfig.safeDark`, `.warningDark`, `.dangerDark`, `.unknownDark`  
+Dark variants use solid background + white text/icon (vs. transparent tint in light mode).  
+Usage pattern in widgets:
+```dart
+final isDark = Theme.of(context).brightness == Brightness.dark;
+final config = isDark ? RiskLevelConfig.safeDark : RiskLevelConfig.safe;
+```
 
 ### Version
 - Version managed in `pubspec.yaml` (`version: x.y.z+build`)
