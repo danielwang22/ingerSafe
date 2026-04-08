@@ -49,12 +49,20 @@ class _AppAboutDialogState extends State<AppAboutDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final dialogBg = isDark ? AppTheme.cardDarkColor : const Color(0xFFFAF7F5);
+    final dialogBorder =
+        isDark ? AppTheme.borderDarkColor : AppTheme.borderColor;
+    final titleColor = isDark ? AppTheme.cardColor : const Color(0xFF1F2E29);
+    final mutedColor =
+        isDark ? AppTheme.mutedDarkColor : const Color(0xFF677E77);
+
     return Container(
       constraints: const BoxConstraints(maxWidth: 382),
       decoration: BoxDecoration(
-        color: const Color(0xFFFAF7F5),
+        color: dialogBg,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFFE5E0DC)),
+        border: Border.all(color: dialogBorder),
         boxShadow: const [
           BoxShadow(
             color: Color(0x1A000000),
@@ -83,13 +91,19 @@ class _AppAboutDialogState extends State<AppAboutDialog> {
                     children: [
                       _buildHeader(),
                       const SizedBox(height: 20),
-                      _buildScrollableContent(),
+                      _buildScrollableContent(
+                          titleColor: titleColor,
+                          mutedColor: mutedColor,
+                          isDark: isDark),
                     ],
                   ),
                 ),
               ),
               // Fixed footer
-              _buildFixedFooter(context),
+              _buildFixedFooter(context,
+                  dialogBg: dialogBg,
+                  dialogBorder: dialogBorder,
+                  mutedColor: mutedColor),
             ],
           ),
           // Close button
@@ -107,7 +121,8 @@ class _AppAboutDialogState extends State<AppAboutDialog> {
                 child: Center(
                   child: AppIcons.cross(
                     size: 30,
-                    color: AppTheme.foregroundColor,
+                    color:
+                        isDark ? AppTheme.cardColor : AppTheme.foregroundColor,
                   ),
                 ),
               ),
@@ -133,7 +148,7 @@ class _AppAboutDialogState extends State<AppAboutDialog> {
             child: Icon(
               Icons.eco,
               size: 28,
-              color: Colors.white,
+              color: AppTheme.cardColor,
             ),
           ),
         ),
@@ -141,7 +156,11 @@ class _AppAboutDialogState extends State<AppAboutDialog> {
     );
   }
 
-  Widget _buildScrollableContent() {
+  Widget _buildScrollableContent({
+    required Color titleColor,
+    required Color mutedColor,
+    required bool isDark,
+  }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -151,7 +170,7 @@ class _AppAboutDialogState extends State<AppAboutDialog> {
           style: GoogleFonts.nunito(
             fontSize: 16,
             fontWeight: FontWeight.w400,
-            color: const Color(0xFF1F2E29).withValues(alpha: 0.8),
+            color: titleColor,
             height: 24 / 16,
           ),
         ),
@@ -161,18 +180,24 @@ class _AppAboutDialogState extends State<AppAboutDialog> {
           icon: AppIcons.safe(size: 16, color: AppTheme.primaryColor),
           title: _t['feature1Title']!,
           description: _t['feature1Desc']!,
+          titleColor: titleColor,
+          mutedColor: mutedColor,
         ),
         const SizedBox(height: 12),
         _buildFeatureItem(
           icon: AppIcons.refs(size: 16, color: AppTheme.primaryColor),
           title: _t['feature2Title']!,
           description: _t['feature2Desc']!,
+          titleColor: titleColor,
+          mutedColor: mutedColor,
         ),
         const SizedBox(height: 12),
         _buildFeatureItem(
           icon: AppIcons.warning(size: 16, color: AppTheme.primaryColor),
           title: _t['feature3Title']!,
           description: _t['feature3Desc']!,
+          titleColor: titleColor,
+          mutedColor: mutedColor,
         ),
         const SizedBox(height: 16),
         // Disclaimer
@@ -180,7 +205,9 @@ class _AppAboutDialogState extends State<AppAboutDialog> {
           width: double.infinity,
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color: const Color(0xFFF1EDEA).withValues(alpha: 0.5),
+            color: isDark
+                ? AppTheme.cardBackgroundDarkColor
+                : const Color(0xFFF1EDEA).withValues(alpha: 0.5),
             borderRadius: BorderRadius.circular(12),
           ),
           child: Text(
@@ -188,7 +215,7 @@ class _AppAboutDialogState extends State<AppAboutDialog> {
             style: GoogleFonts.nunito(
               fontSize: 14,
               fontWeight: FontWeight.w400,
-              color: const Color(0xFF677E77),
+              color: mutedColor,
               height: 20 / 14,
             ),
           ),
@@ -197,15 +224,17 @@ class _AppAboutDialogState extends State<AppAboutDialog> {
     );
   }
 
-  Widget _buildFixedFooter(BuildContext context) {
+  Widget _buildFixedFooter(
+    BuildContext context, {
+    required Color dialogBg,
+    required Color dialogBorder,
+    required Color mutedColor,
+  }) {
     return Container(
       decoration: BoxDecoration(
-        color: const Color(0xFFFAF7F5),
+        color: dialogBg,
         border: Border(
-          top: BorderSide(
-            color: const Color(0xFFE5E0DC),
-            width: 1,
-          ),
+          top: BorderSide(color: dialogBorder, width: 1),
         ),
         borderRadius: const BorderRadius.vertical(bottom: Radius.circular(16)),
       ),
@@ -281,7 +310,7 @@ class _AppAboutDialogState extends State<AppAboutDialog> {
             style: GoogleFonts.nunito(
               fontSize: 12,
               fontWeight: FontWeight.w400,
-              color: const Color(0xFF677E77),
+              color: mutedColor,
               height: 12 / 12,
             ),
           ),
@@ -294,6 +323,8 @@ class _AppAboutDialogState extends State<AppAboutDialog> {
     required Widget icon,
     required String title,
     required String description,
+    required Color titleColor,
+    required Color mutedColor,
   }) {
     return Row(
       children: [
@@ -316,7 +347,7 @@ class _AppAboutDialogState extends State<AppAboutDialog> {
                 style: GoogleFonts.nunito(
                   fontSize: 16,
                   fontWeight: FontWeight.w700,
-                  color: const Color(0xFF1F2E29),
+                  color: titleColor,
                   height: 20 / 16,
                 ),
               ),
@@ -326,7 +357,7 @@ class _AppAboutDialogState extends State<AppAboutDialog> {
                 style: GoogleFonts.nunito(
                   fontSize: 16,
                   fontWeight: FontWeight.w400,
-                  color: const Color(0xFF677E77),
+                  color: mutedColor,
                   height: 24 / 16,
                 ),
               ),

@@ -49,16 +49,16 @@ class _ReportCardState extends State<ReportCard> {
     }
   }
 
-  RiskLevelConfig get _riskConfig {
+  RiskLevelConfig _riskConfig(bool isDark) {
     switch (widget.report.riskLevel) {
       case RiskLevel.safe:
-        return RiskLevelConfig.safe;
+        return isDark ? RiskLevelConfig.safeDark : RiskLevelConfig.safe;
       case RiskLevel.warning:
-        return RiskLevelConfig.warning;
+        return isDark ? RiskLevelConfig.warningDark : RiskLevelConfig.warning;
       case RiskLevel.danger:
-        return RiskLevelConfig.danger;
+        return isDark ? RiskLevelConfig.dangerDark : RiskLevelConfig.danger;
       case RiskLevel.unknown:
-        return RiskLevelConfig.unknown;
+        return isDark ? RiskLevelConfig.unknownDark : RiskLevelConfig.unknown;
     }
   }
 
@@ -94,10 +94,11 @@ class _ReportCardState extends State<ReportCard> {
   void _showConfirmOverlay() {
     final confirmText = (AppStrings.reportCardTexts[widget.langCode] ??
         AppStrings.reportCardTexts['en']!)['confirmDelete']!;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     _overlayEntry = OverlayEntry(
       builder: (context) => Positioned(
-        top: MediaQuery.of(context).padding.top + 16,
+        top: MediaQuery.of(context).padding.top + kToolbarHeight + 16,
         left: 0,
         right: 0,
         child: Center(
@@ -106,8 +107,11 @@ class _ReportCardState extends State<ReportCard> {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               decoration: BoxDecoration(
-                color: AppTheme.foregroundColor,
+                color:
+                    isDark ? AppTheme.cardDarkColor : AppTheme.foregroundColor,
                 borderRadius: BorderRadius.circular(16),
+                border:
+                    isDark ? Border.all(color: AppTheme.borderDarkColor) : null,
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withValues(alpha: 0.1),
@@ -118,8 +122,8 @@ class _ReportCardState extends State<ReportCard> {
               ),
               child: Text(
                 confirmText,
-                style: const TextStyle(
-                  color: AppTheme.backgroundColor,
+                style: TextStyle(
+                  color: isDark ? AppTheme.cardColor : AppTheme.backgroundColor,
                   fontSize: 16,
                   height: 20 / 16,
                   letterSpacing: 1.2,
@@ -163,8 +167,10 @@ class _ReportCardState extends State<ReportCard> {
 
   @override
   Widget build(BuildContext context) {
-    Theme.of(context);
-    final riskConfig = _riskConfig;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final riskConfig = _riskConfig(isDark);
+    final mutedColor =
+        isDark ? AppTheme.mutedDarkColor : AppTheme.mutedForegroundColor;
 
     return Card(
       margin: EdgeInsets.zero,
@@ -199,11 +205,13 @@ class _ReportCardState extends State<ReportCard> {
                             Expanded(
                               child: Text(
                                 widget.report.title,
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.w600,
                                   height: 28 / 18,
-                                  color: AppTheme.foregroundColor,
+                                  color: isDark
+                                      ? AppTheme.cardColor
+                                      : AppTheme.foregroundColor,
                                 ),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
@@ -243,11 +251,11 @@ class _ReportCardState extends State<ReportCard> {
                         const SizedBox(height: 12),
                         Text(
                           widget.report.summary,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
                             height: 20 / 16,
-                            color: AppTheme.mutedForegroundColor,
+                            color: mutedColor,
                           ),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
@@ -262,7 +270,10 @@ class _ReportCardState extends State<ReportCard> {
                 decoration: BoxDecoration(
                   border: Border(
                     top: BorderSide(
-                      color: AppTheme.borderColor.withValues(alpha: 0.3),
+                      color: (isDark
+                              ? AppTheme.borderDarkColor
+                              : AppTheme.borderColor)
+                          .withValues(alpha: 0.3),
                       width: 1,
                     ),
                   ),
@@ -273,11 +284,11 @@ class _ReportCardState extends State<ReportCard> {
                   children: [
                     Text(
                       _formatDate(widget.report.date),
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w400,
                         height: 20 / 14,
-                        color: AppTheme.mutedForegroundColor,
+                        color: mutedColor,
                       ),
                     ),
                     Row(
@@ -312,7 +323,7 @@ class _ReportCardState extends State<ReportCard> {
                                   size: 24,
                                   color: _isDeleteActive || _showConfirm
                                       ? AppTheme.destructiveColor
-                                      : AppTheme.mutedForegroundColor,
+                                      : mutedColor,
                                 ),
                               ),
                             ),
@@ -339,7 +350,6 @@ class _ReportCardState extends State<ReportCard> {
                               decoration: BoxDecoration(
                                 color: _isReanalyzeActive
                                     ? AppTheme.primaryColor
-                                        .withValues(alpha: 0.08)
                                     : Colors.transparent,
                                 borderRadius: BorderRadius.circular(
                                   _isReanalyzeActive ? 18 : 16,
@@ -349,8 +359,8 @@ class _ReportCardState extends State<ReportCard> {
                                 child: AppIcons.reanalyze(
                                   size: 22,
                                   color: _isReanalyzeActive
-                                      ? AppTheme.primaryColor
-                                      : AppTheme.mutedForegroundColor,
+                                      ? AppTheme.cardColor
+                                      : mutedColor,
                                 ),
                               ),
                             ),
@@ -374,8 +384,7 @@ class _ReportCardState extends State<ReportCard> {
                               height: 36,
                               decoration: BoxDecoration(
                                 color: _isNavActive
-                                    ? const Color(0xFFFAF7F5)
-                                        .withValues(alpha: 0.8)
+                                    ? AppTheme.primaryColor
                                     : Colors.transparent,
                                 borderRadius: BorderRadius.circular(
                                   _isNavActive ? 18 : 16,
@@ -385,9 +394,8 @@ class _ReportCardState extends State<ReportCard> {
                                 child: AppIcons.arrowRight(
                                   size: 14,
                                   color: _isNavActive
-                                      ? AppTheme.primaryColor
-                                      : AppTheme.mutedForegroundColor
-                                          .withValues(alpha: 0.5),
+                                      ? AppTheme.cardColor
+                                      : mutedColor,
                                 ),
                               ),
                             ),

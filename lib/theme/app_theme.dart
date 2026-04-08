@@ -25,6 +25,16 @@ class AppTheme {
   // destructive-foreground: hsl(0 0% 100%)
   static const Color destructiveForegroundColor = Color(0xFFFFFFFF);
 
+  // --- Dark mode tokens (from Figma Color System Dark) ---
+  static const Color backgroundDarkColor = Color(0xFF0A0A0A);     // Scaffold background
+  static const Color cardDarkColor = Color(0xFF2C2C2E);           // Header/Footer/Dialog bg
+  static const Color cardBackgroundDarkColor = Color(0xFF1C1C1E); // ReportCard bg
+  static const Color borderDarkColor = Color(0xFF38383A);
+  static const Color mutedDarkColor = Color(0xFF8E8E93);          // muted text
+  static const Color textTertiaryColor = Color(0xFF636366);       // input hint text
+  static const Color warningLabelColor = Color(0xFFD35400);       // warning label
+  static const Color amberColor = Color(0xFFD97706);              // safety warning icon
+
   static ThemeData lightTheme = ThemeData(
     useMaterial3: true,
     brightness: Brightness.light,
@@ -177,41 +187,62 @@ class AppTheme {
     useMaterial3: true,
     brightness: Brightness.dark,
     primaryColor: primaryColor,
-    scaffoldBackgroundColor: const Color(0xFF0A0A0A),
-    cardColor: const Color(0xFF171717),
+    scaffoldBackgroundColor: backgroundDarkColor,
+    cardColor: cardBackgroundDarkColor,
     colorScheme: const ColorScheme.dark(
       primary: primaryColor,
       secondary: primaryColor,
-      surface: Color(0xFF171717),
+      surface: cardBackgroundDarkColor,
       error: dangerColor,
       onPrimary: Colors.white,
       onSecondary: Colors.white,
-      onSurface: Color(0xFFFAFAFA),
+      onSurface: Colors.white,
       onError: Colors.white,
     ),
     textTheme: GoogleFonts.nunitoTextTheme(ThemeData.dark().textTheme),
     appBarTheme: AppBarTheme(
-      backgroundColor: const Color(0xFF0A0A0A),
-      foregroundColor: const Color(0xFFFAFAFA),
+      backgroundColor: cardDarkColor,
+      foregroundColor: Colors.white,
       elevation: 0,
       surfaceTintColor: Colors.transparent,
       centerTitle: false,
       titleTextStyle: GoogleFonts.nunito(
-        color: const Color(0xFFFAFAFA),
+        color: Colors.white,
         fontSize: 18,
         fontWeight: FontWeight.w800,
         letterSpacing: -0.5,
       ),
     ),
     cardTheme: CardThemeData(
-      color: const Color(0xFF171717),
+      color: cardBackgroundDarkColor,
       elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
-        side: BorderSide(
-          color: const Color(0xFF262626).withValues(alpha: 0.5),
+        side: const BorderSide(
+          color: borderDarkColor,
           width: 1,
         ),
+      ),
+    ),
+    inputDecorationTheme: InputDecorationTheme(
+      filled: true,
+      fillColor: cardBackgroundDarkColor,
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: const BorderSide(color: borderDarkColor),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: const BorderSide(color: borderDarkColor),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: const BorderSide(color: primaryColor, width: 2),
+      ),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      hintStyle: const TextStyle(
+        color: textTertiaryColor,
+        fontSize: 14,
       ),
     ),
   );
@@ -260,6 +291,39 @@ class RiskLevelConfig {
     label: '不確定',
     iconBuilder: ({double? size, Color? color}) =>
         Icon(Icons.help_outline, size: size, color: color ?? AppTheme.mutedForegroundColor),
+  );
+
+  // Dark mode variants — solid background, white text/icon
+  static RiskLevelConfig safeDark = RiskLevelConfig(
+    color: Colors.white,
+    backgroundColor: AppTheme.safeColor,
+    label: '低風險',
+    iconBuilder: ({double? size, Color? color}) =>
+        _buildSafeIcon(size: size, color: color ?? Colors.white),
+  );
+
+  static RiskLevelConfig warningDark = RiskLevelConfig(
+    color: Colors.white,
+    backgroundColor: AppTheme.warningLabelColor,
+    label: '中風險',
+    iconBuilder: ({double? size, Color? color}) =>
+        _buildWarningIcon(size: size, color: color ?? Colors.white),
+  );
+
+  static RiskLevelConfig dangerDark = RiskLevelConfig(
+    color: Colors.white,
+    backgroundColor: AppTheme.dangerColor,
+    label: '高風險',
+    iconBuilder: ({double? size, Color? color}) =>
+        _buildDangerIcon(size: size, color: color ?? Colors.white),
+  );
+
+  static RiskLevelConfig unknownDark = RiskLevelConfig(
+    color: Colors.white,
+    backgroundColor: AppTheme.mutedDarkColor,
+    label: '不確定',
+    iconBuilder: ({double? size, Color? color}) =>
+        Icon(Icons.help_outline, size: size, color: color ?? Colors.white),
   );
 
   static Widget _buildSafeIcon({double? size, Color? color}) {

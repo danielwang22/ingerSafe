@@ -127,12 +127,26 @@ class _UploadDialogState extends State<UploadDialog> {
 
   @override
   Widget build(BuildContext context) {
-    Theme.of(context);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final dialogBg = isDark ? AppTheme.cardDarkColor : AppTheme.backgroundColor;
+    final inputBg =
+        isDark ? AppTheme.cardBackgroundDarkColor : AppTheme.backgroundColor;
+    final titleColor = isDark ? AppTheme.cardColor : AppTheme.foregroundColor;
+    final mutedColor =
+        isDark ? AppTheme.mutedDarkColor : AppTheme.mutedForegroundColor;
+    final hintColor = isDark
+        ? AppTheme.textTertiaryColor
+        : AppTheme.foregroundColor.withValues(alpha: 0.5);
+    final addBtnBorderColor =
+        isDark ? AppTheme.mutedDarkColor : AppTheme.borderColor;
 
     return Dialog(
-      backgroundColor: AppTheme.backgroundColor,
+      backgroundColor: dialogBg,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
+        side: isDark
+            ? const BorderSide(color: AppTheme.borderDarkColor)
+            : BorderSide.none,
       ),
       child: GestureDetector(
         onTap: widget.isTutorial ? () => Navigator.pop(context) : null,
@@ -201,19 +215,19 @@ class _UploadDialogState extends State<UploadDialog> {
                               children: [
                                 Text(
                                   _t['dialogTitle']!,
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                       fontSize: 18,
                                       fontWeight: FontWeight.w600,
-                                      color: AppTheme.foregroundColor,
+                                      color: titleColor,
                                       height: 28 / 18),
                                 ),
                                 const SizedBox(height: 8),
                                 Text(
                                   _t['dialogDescription']!,
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w400,
-                                      color: AppTheme.mutedForegroundColor,
+                                      color: mutedColor,
                                       height: 20 / 16),
                                 ),
                               ],
@@ -234,7 +248,7 @@ class _UploadDialogState extends State<UploadDialog> {
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
-                                color: AppTheme.foregroundColor,
+                                color: titleColor,
                                 height: 20 / 16,
                               ),
                             ),
@@ -256,12 +270,14 @@ class _UploadDialogState extends State<UploadDialog> {
                                   final activeColor = isActive
                                       ? AppTheme.primaryColor
                                           .withValues(alpha: 0.5)
-                                      : AppTheme.mutedForegroundColor
-                                          .withValues(alpha: 0.7);
+                                      : isDark
+                                          ? AppTheme.mutedDarkColor
+                                          : AppTheme.mutedForegroundColor
+                                              .withValues(alpha: 0.7);
                                   final borderColor = isActive
                                       ? AppTheme.primaryColor
                                           .withValues(alpha: 0.5)
-                                      : AppTheme.borderColor;
+                                      : addBtnBorderColor;
 
                                   return MouseRegion(
                                     onEnter: (_) => setState(
@@ -338,16 +354,15 @@ class _UploadDialogState extends State<UploadDialog> {
                                         child: Container(
                                           width: 20,
                                           height: 20,
-                                          decoration: BoxDecoration(
-                                            color: AppTheme.foregroundColor
-                                                .withValues(alpha: 0.5),
+                                          decoration: const BoxDecoration(
+                                            color: Colors.black54,
                                             shape: BoxShape.circle,
                                           ),
                                           child: Padding(
                                             padding: const EdgeInsets.all(3.0),
                                             child: AppIcons.cross(
                                               size: 12,
-                                              color: AppTheme.cardColor,
+                                              color: Colors.white,
                                             ),
                                           ),
                                         ),
@@ -363,7 +378,7 @@ class _UploadDialogState extends State<UploadDialog> {
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
-                                color: AppTheme.foregroundColor,
+                                color: titleColor,
                                 height: 20 / 16,
                               ),
                             ),
@@ -373,8 +388,8 @@ class _UploadDialogState extends State<UploadDialog> {
                               textInputAction: TextInputAction.next,
                               onSubmitted: (_) => FocusScope.of(context)
                                   .requestFocus(_descriptionFocusNode),
-                              style: const TextStyle(
-                                color: AppTheme.foregroundColor,
+                              style: TextStyle(
+                                color: titleColor,
                                 fontSize: 16,
                                 fontWeight: FontWeight.w400,
                                 height: 20 / 16,
@@ -382,11 +397,8 @@ class _UploadDialogState extends State<UploadDialog> {
                               ),
                               decoration: InputDecoration(
                                 hintText: _t['titleHint'],
-                                hintStyle: TextStyle(
-                                  color: AppTheme.foregroundColor
-                                      .withValues(alpha: 0.5),
-                                ),
-                                fillColor: AppTheme.backgroundColor,
+                                hintStyle: TextStyle(color: hintColor),
+                                fillColor: inputBg,
                                 filled: true,
                                 contentPadding: const EdgeInsets.symmetric(
                                     horizontal: 12, vertical: 8),
@@ -398,7 +410,7 @@ class _UploadDialogState extends State<UploadDialog> {
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w600,
-                                color: AppTheme.foregroundColor,
+                                color: titleColor,
                                 height: 20 / 16,
                               ),
                             ),
@@ -408,8 +420,8 @@ class _UploadDialogState extends State<UploadDialog> {
                               focusNode: _descriptionFocusNode,
                               textInputAction: TextInputAction.done,
                               onSubmitted: (_) => _handleSubmit(),
-                              style: const TextStyle(
-                                color: AppTheme.foregroundColor,
+                              style: TextStyle(
+                                color: titleColor,
                                 fontSize: 16,
                                 fontWeight: FontWeight.w400,
                                 height: 20 / 16,
@@ -417,11 +429,8 @@ class _UploadDialogState extends State<UploadDialog> {
                               ),
                               decoration: InputDecoration(
                                 hintText: _t['descriptionHint'],
-                                hintStyle: TextStyle(
-                                  color: AppTheme.foregroundColor
-                                      .withValues(alpha: 0.5),
-                                ),
-                                fillColor: AppTheme.backgroundColor,
+                                hintStyle: TextStyle(color: hintColor),
+                                fillColor: inputBg,
                                 filled: true,
                                 contentPadding: const EdgeInsets.symmetric(
                                     horizontal: 12, vertical: 8),
@@ -434,7 +443,9 @@ class _UploadDialogState extends State<UploadDialog> {
                     ),
                     Divider(
                         height: 1,
-                        color: AppTheme.borderColor.withValues(alpha: 0.5)),
+                        color: isDark
+                            ? AppTheme.borderDarkColor
+                            : AppTheme.borderColor.withValues(alpha: 0.5)),
                     Padding(
                       padding: const EdgeInsets.only(
                           left: 16, right: 16, top: 16, bottom: 24),
@@ -476,10 +487,10 @@ class _UploadDialogState extends State<UploadDialog> {
                                       _images.isEmpty ? null : _handleSubmit,
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: AppTheme.primaryColor,
-                                    foregroundColor: Colors.white,
+                                    foregroundColor: AppTheme.cardColor,
                                     disabledBackgroundColor:
                                         AppTheme.primaryColor,
-                                    disabledForegroundColor: Colors.white,
+                                    disabledForegroundColor: AppTheme.cardColor,
                                     elevation: 0,
                                     minimumSize: const Size(0, 0),
                                     padding: const EdgeInsets.symmetric(
@@ -531,7 +542,9 @@ class _UploadDialogState extends State<UploadDialog> {
                         child: Center(
                           child: AppIcons.cross(
                             size: 30,
-                            color: AppTheme.foregroundColor,
+                            color: isDark
+                                ? AppTheme.cardColor
+                                : AppTheme.foregroundColor,
                           ),
                         ),
                       ),

@@ -206,7 +206,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppTheme.primaryColor,
-                foregroundColor: Colors.white,
+                foregroundColor: AppTheme.cardColor,
                 padding: const EdgeInsets.symmetric(
                   horizontal: 24,
                   vertical: 12,

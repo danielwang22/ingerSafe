@@ -48,6 +48,7 @@ class LanguageSwitcher extends StatefulWidget {
 class _LanguageSwitcherState extends State<LanguageSwitcher> {
   OverlayEntry? _overlayEntry;
   final LayerLink _layerLink = LayerLink();
+  bool _isDark = false;
 
   void _toggleMenu() {
     if (_overlayEntry != null) {
@@ -58,6 +59,7 @@ class _LanguageSwitcherState extends State<LanguageSwitcher> {
   }
 
   void _showOverlay() {
+    _isDark = Theme.of(context).brightness == Brightness.dark;
     _overlayEntry = OverlayEntry(
       builder: (context) => Stack(
         children: [
@@ -104,9 +106,11 @@ class _LanguageSwitcherState extends State<LanguageSwitcher> {
       child: Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: _isDark ? AppTheme.cardDarkColor : AppTheme.cardColor,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: const Color(0xFFE5E0DC)),
+          border: Border.all(
+            color: _isDark ? AppTheme.borderDarkColor : AppTheme.borderColor,
+          ),
           boxShadow: const [
             BoxShadow(
               color: Color(0x1A000000),
@@ -178,7 +182,9 @@ class _LanguageSwitcherState extends State<LanguageSwitcher> {
                   fontWeight: isSelected ? FontWeight.w700 : FontWeight.w400,
                   color: isSelected
                       ? AppTheme.primaryColor
-                      : AppTheme.foregroundColor,
+                      : (_isDark
+                          ? AppTheme.cardColor
+                          : AppTheme.foregroundColor),
                   height: 28 / 18,
                 ),
               ),
@@ -191,6 +197,9 @@ class _LanguageSwitcherState extends State<LanguageSwitcher> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final mutedColor =
+        isDark ? AppTheme.mutedDarkColor : AppTheme.mutedForegroundColor;
     return CompositedTransformTarget(
       link: _layerLink,
       child: GestureDetector(
@@ -204,7 +213,7 @@ class _LanguageSwitcherState extends State<LanguageSwitcher> {
           child: Center(
             child: AppIcons.globe(
               size: 30,
-              color: AppTheme.mutedForegroundColor,
+              color: mutedColor,
             ),
           ),
         ),

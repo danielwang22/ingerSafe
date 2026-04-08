@@ -24,12 +24,16 @@ class BottomNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       decoration: BoxDecoration(
-        color: AppTheme.cardColor.withValues(alpha: 0.5),
+        color: isDark
+            ? AppTheme.cardDarkColor.withValues(alpha: 0.9)
+            : AppTheme.cardColor.withValues(alpha: 0.5),
         border: Border(
           top: BorderSide(
-            color: AppTheme.borderColor.withValues(alpha: 0.5),
+            color: (isDark ? AppTheme.borderDarkColor : AppTheme.borderColor)
+                .withValues(alpha: 0.5),
             width: 1,
           ),
         ),
@@ -100,7 +104,8 @@ class BottomNav extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
       ),
       tooltipPadding: const EdgeInsets.all(20),
-      titleTextStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+      titleTextStyle:
+          const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
       descTextStyle: const TextStyle(fontSize: 16),
       child: child,
     );
@@ -130,6 +135,9 @@ class _NavButtonState extends State<_NavButton> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final mutedColor =
+        isDark ? AppTheme.mutedDarkColor : AppTheme.mutedForegroundColor;
     return MouseRegion(
       onEnter: (_) => setState(() => _isHovered = true),
       onExit: (_) => setState(() => _isHovered = false),
@@ -165,20 +173,17 @@ class _NavButtonState extends State<_NavButton> {
               children: [
                 widget.iconBuilder(
                   size: 36,
-                  color: _isHighlighted
-                      ? Colors.white
-                      : AppTheme.mutedForegroundColor,
+                  color: _isHighlighted ? AppTheme.cardColor : mutedColor,
                 ),
                 const SizedBox(height: 8),
                 Text(
                   widget.label,
                   style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: _isHighlighted
-                          ? Colors.white
-                          : AppTheme.mutedForegroundColor,
-                      height: 1),
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                    color: _isHighlighted ? AppTheme.cardColor : mutedColor,
+                    height: 1,
+                  ),
                 ),
               ],
             ),

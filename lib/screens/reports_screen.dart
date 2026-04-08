@@ -385,6 +385,9 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final mutedColor =
+        isDark ? AppTheme.mutedDarkColor : AppTheme.mutedForegroundColor;
 
     // Reactive state from providers
     final selectedLanguage =
@@ -404,13 +407,16 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
       ..sort((a, b) => int.parse(b).compareTo(int.parse(a)));
 
     return Scaffold(
-      backgroundColor: AppTheme.backgroundColor,
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: AppTheme.backgroundColor.withValues(alpha: 0.8),
+        backgroundColor:
+            theme.appBarTheme.backgroundColor?.withValues(alpha: 0.95),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1),
           child: Container(
-            color: AppTheme.borderColor.withValues(alpha: 0.5),
+            color: isDark
+                ? AppTheme.borderDarkColor
+                : AppTheme.borderColor.withValues(alpha: 0.5),
             height: 1,
           ),
         ),
@@ -425,7 +431,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
               ),
               child: const Icon(
                 Icons.eco,
-                color: Colors.white,
+                color: AppTheme.cardColor,
                 size: 16,
               ),
             ),
@@ -462,7 +468,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
                   style: theme.textTheme.bodySmall?.copyWith(
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
-                    color: AppTheme.mutedForegroundColor,
+                    color: mutedColor,
                     height: 1,
                   ),
                   maxLines: 1,
@@ -493,13 +499,15 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
                         width: 64,
                         height: 64,
                         decoration: BoxDecoration(
-                          color: AppTheme.mutedColor,
+                          color: isDark
+                              ? AppTheme.cardDarkColor
+                              : AppTheme.mutedColor,
                           borderRadius: BorderRadius.circular(32),
                         ),
-                        child: const Icon(
+                        child: Icon(
                           Icons.eco,
                           size: 32,
-                          color: AppTheme.mutedForegroundColor,
+                          color: mutedColor,
                         ),
                       ),
                       const SizedBox(height: 16),
@@ -508,7 +516,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
                         style: theme.textTheme.titleLarge?.copyWith(
                           fontSize: 18,
                           height: 1.5,
-                          color: AppTheme.mutedForegroundColor,
+                          color: mutedColor,
                         ),
                       ),
                       const SizedBox(height: 4),
@@ -542,10 +550,10 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
                             children: [
                               Text(
                                 '$year${t['yearSuffix']}'.toUpperCase(),
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.w600,
-                                  color: AppTheme.mutedForegroundColor,
+                                  color: isDark ? AppTheme.cardColor : mutedColor,
                                   height: 28 / 20,
                                   letterSpacing: 1.2,
                                 ),
@@ -557,14 +565,17 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
                                   width: 36,
                                   height: 36,
                                   decoration: BoxDecoration(
-                                    color: AppTheme.primaryColor
-                                        .withValues(alpha: 0.1),
+                                    color: isDark
+                                        ? AppTheme.primaryColor
+                                        : AppTheme.primaryColor.withValues(alpha: 0.1),
                                     borderRadius: BorderRadius.circular(999),
                                   ),
                                   child: Center(
                                     child: AppIcons.plus(
                                       size: 12,
-                                      color: AppTheme.primaryColor,
+                                      color: isDark
+                                          ? Colors.white
+                                          : AppTheme.primaryColor,
                                     ),
                                   ),
                                 ),
@@ -591,8 +602,10 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
                                   style: TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.w600,
-                                    color: AppTheme.foregroundColor
-                                        .withValues(alpha: 0.7),
+                                    color: isDark
+                                        ? AppTheme.cardColor
+                                        : AppTheme.foregroundColor
+                                            .withValues(alpha: 0.7),
                                     height: 28 / 18,
                                   ),
                                 ),

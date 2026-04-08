@@ -86,8 +86,8 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 16, vertical: 16),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                   child: _buildActions(),
                 ),
               ],
@@ -122,7 +122,7 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
             ],
           ),
           child: const Center(
-            child: Icon(Icons.eco, size: 32, color: Colors.white),
+            child: Icon(Icons.eco, size: 32, color: AppTheme.cardColor),
           ),
         ),
         const SizedBox(height: 10),
@@ -215,7 +215,7 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
                   style: GoogleFonts.nunito(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
-                    color: Colors.white,
+                    color: AppTheme.cardColor,
                     height: 20 / 16,
                   ),
                 ),

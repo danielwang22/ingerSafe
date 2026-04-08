@@ -25,7 +25,6 @@ class ThemeNotifier extends AsyncNotifier<ThemeMode> {
   }
 }
 
-final themeNotifierProvider =
-    AsyncNotifierProvider<ThemeNotifier, ThemeMode>(
+final themeNotifierProvider = AsyncNotifierProvider<ThemeNotifier, ThemeMode>(
   ThemeNotifier.new,
 );
