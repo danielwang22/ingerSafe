@@ -86,3 +86,4 @@ owasp_*.json
 .claude/
 android/build/
 CODE_REVIEW.md
+upload_certificate.pem
