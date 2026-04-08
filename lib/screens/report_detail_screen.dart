@@ -48,10 +48,11 @@ class _ReportDetailScreenState extends ConsumerState<ReportDetailScreen> {
   void _showConfirmOverlay() {
     final confirmText = (AppStrings.reportCardTexts[widget.langCode] ??
         AppStrings.reportCardTexts['en']!)['confirmDelete']!;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     _overlayEntry = OverlayEntry(
       builder: (context) => Positioned(
-        top: MediaQuery.of(context).padding.top + 16,
+        top: MediaQuery.of(context).padding.top + kToolbarHeight + 16,
         left: 0,
         right: 0,
         child: Center(
@@ -60,8 +61,11 @@ class _ReportDetailScreenState extends ConsumerState<ReportDetailScreen> {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               decoration: BoxDecoration(
-                color: AppTheme.foregroundColor,
+                color:
+                    isDark ? AppTheme.cardDarkColor : AppTheme.foregroundColor,
                 borderRadius: BorderRadius.circular(16),
+                border:
+                    isDark ? Border.all(color: AppTheme.borderDarkColor) : null,
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withValues(alpha: 0.1),
@@ -72,8 +76,8 @@ class _ReportDetailScreenState extends ConsumerState<ReportDetailScreen> {
               ),
               child: Text(
                 confirmText,
-                style: const TextStyle(
-                  color: AppTheme.backgroundColor,
+                style: TextStyle(
+                  color: isDark ? AppTheme.cardColor : AppTheme.backgroundColor,
                   fontSize: 16,
                   height: 20 / 16,
                   letterSpacing: 1.2,
@@ -211,6 +215,19 @@ class _ReportDetailScreenState extends ConsumerState<ReportDetailScreen> {
     }
   }
 
+  RiskLevelConfig get _riskConfigDark {
+    switch (report.riskLevel) {
+      case RiskLevel.safe:
+        return RiskLevelConfig.safeDark;
+      case RiskLevel.warning:
+        return RiskLevelConfig.warningDark;
+      case RiskLevel.danger:
+        return RiskLevelConfig.dangerDark;
+      case RiskLevel.unknown:
+        return RiskLevelConfig.unknownDark;
+    }
+  }
+
   String get _riskLabel {
     switch (report.riskLevel) {
       case RiskLevel.safe:
@@ -256,11 +273,14 @@ class _ReportDetailScreenState extends ConsumerState<ReportDetailScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final riskConfig = _riskConfig;
+    final isDark = theme.brightness == Brightness.dark;
+    final mutedColor =
+        isDark ? AppTheme.mutedDarkColor : AppTheme.mutedForegroundColor;
+    final riskConfig = isDark ? _riskConfigDark : _riskConfig;
     final content = _splitContent();
 
     return Scaffold(
-      backgroundColor: AppTheme.backgroundColor,
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
         leadingWidth: 56,
         leading: Padding(
@@ -276,7 +296,7 @@ class _ReportDetailScreenState extends ConsumerState<ReportDetailScreen> {
               child: Center(
                 child: AppIcons.arrow2Left(
                   size: 20,
-                  color: AppTheme.foregroundColor,
+                  color: isDark ? AppTheme.cardColor : AppTheme.foregroundColor,
                 ),
               ),
             ),
@@ -285,10 +305,10 @@ class _ReportDetailScreenState extends ConsumerState<ReportDetailScreen> {
         titleSpacing: 8,
         title: Text(
           _t['safetyReport']!,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 18,
             fontWeight: FontWeight.w600,
-            color: AppTheme.foregroundColor,
+            color: isDark ? AppTheme.cardColor : AppTheme.foregroundColor,
             height: 28 / 18,
           ),
         ),
@@ -297,7 +317,7 @@ class _ReportDetailScreenState extends ConsumerState<ReportDetailScreen> {
             onPressed: _showReanalyzeDialog,
             icon: AppIcons.reanalyze(
               size: 25,
-              color: AppTheme.mutedForegroundColor.withValues(alpha: 0.7),
+              color: mutedColor.withValues(alpha: 0.7),
             ),
             tooltip: _t['reanalyze'] ?? 'Re-analyze',
           ),
@@ -307,7 +327,7 @@ class _ReportDetailScreenState extends ConsumerState<ReportDetailScreen> {
               size: 25,
               color: _showConfirmDelete
                   ? AppTheme.destructiveColor
-                  : AppTheme.mutedForegroundColor.withValues(alpha: 0.7),
+                  : mutedColor.withValues(alpha: 0.7),
             ),
             tooltip: _t['delete'] ?? 'Delete',
           ),
@@ -362,10 +382,12 @@ class _ReportDetailScreenState extends ConsumerState<ReportDetailScreen> {
                   children: [
                     Text(
                       report.title,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w600,
-                        color: AppTheme.foregroundColor,
+                        color: isDark
+                            ? AppTheme.cardColor
+                            : AppTheme.foregroundColor,
                         height: 28 / 20,
                       ),
                     ),
@@ -373,7 +395,7 @@ class _ReportDetailScreenState extends ConsumerState<ReportDetailScreen> {
                     MarkdownBody(
                       data: content.analysis,
                       selectable: true,
-                      styleSheet: _markdownStyle(theme),
+                      styleSheet: _markdownStyle(theme, isDark: isDark),
                       onTapLink: _onTapLink,
                     ),
                   ],
@@ -399,7 +421,9 @@ class _ReportDetailScreenState extends ConsumerState<ReportDetailScreen> {
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.w600,
-                              color: AppTheme.foregroundColor,
+                              color: isDark
+                                  ? AppTheme.cardColor
+                                  : AppTheme.foregroundColor,
                               height: 28 / 20,
                             ),
                           ),
@@ -409,7 +433,7 @@ class _ReportDetailScreenState extends ConsumerState<ReportDetailScreen> {
                       ...content.references.map(
                         (ref) => Padding(
                           padding: const EdgeInsets.only(bottom: 12),
-                          child: _buildReference(ref),
+                          child: _buildReference(ref, isDark: isDark),
                         ),
                       ),
                     ],
@@ -421,7 +445,9 @@ class _ReportDetailScreenState extends ConsumerState<ReportDetailScreen> {
               child: Text(
                 _t['disclaimer']!,
                 style: theme.textTheme.bodySmall?.copyWith(
-                  color: AppTheme.mutedForegroundColor,
+                  color: isDark
+                      ? AppTheme.mutedDarkColor
+                      : AppTheme.mutedForegroundColor,
                   fontSize: 14,
                   height: 20 / 14,
                 ),
@@ -435,51 +461,54 @@ class _ReportDetailScreenState extends ConsumerState<ReportDetailScreen> {
     );
   }
 
-  MarkdownStyleSheet _markdownStyle(ThemeData theme) {
+  MarkdownStyleSheet _markdownStyle(ThemeData theme, {bool isDark = false}) {
+    final headingColor = isDark ? AppTheme.cardColor : AppTheme.foregroundColor;
+    final bodyColor =
+        isDark ? AppTheme.cardColor : AppTheme.mutedForegroundColor;
     return MarkdownStyleSheet(
       p: theme.textTheme.bodyLarge?.copyWith(
-        color: AppTheme.mutedForegroundColor,
+        color: bodyColor,
         fontSize: 18,
         height: 1.8,
       ),
       strong: theme.textTheme.bodyLarge?.copyWith(
         fontWeight: FontWeight.w700,
-        color: AppTheme.foregroundColor,
+        color: headingColor,
         fontSize: 18,
         height: 1.8,
       ),
       h1: theme.textTheme.headlineSmall?.copyWith(
-        color: AppTheme.foregroundColor,
+        color: headingColor,
         fontSize: 20,
         height: 1.8,
       ),
       h2: theme.textTheme.headlineSmall?.copyWith(
-        color: AppTheme.foregroundColor,
+        color: headingColor,
         fontSize: 20,
         height: 1.8,
       ),
       h3: theme.textTheme.headlineSmall?.copyWith(
-        color: AppTheme.foregroundColor,
+        color: headingColor,
         fontSize: 20,
         height: 1.8,
       ),
       h4: theme.textTheme.headlineSmall?.copyWith(
-        color: AppTheme.foregroundColor,
+        color: headingColor,
         fontSize: 20,
         height: 1.8,
       ),
       h5: theme.textTheme.headlineSmall?.copyWith(
-        color: AppTheme.foregroundColor,
+        color: headingColor,
         fontSize: 20,
         height: 1.8,
       ),
       h6: theme.textTheme.headlineSmall?.copyWith(
-        color: AppTheme.foregroundColor,
+        color: headingColor,
         fontSize: 20,
         height: 1.8,
       ),
       listBullet: theme.textTheme.bodyLarge?.copyWith(
-        color: AppTheme.mutedForegroundColor,
+        color: bodyColor,
         fontSize: 18,
         height: 1.8,
       ),
@@ -498,7 +527,7 @@ class _ReportDetailScreenState extends ConsumerState<ReportDetailScreen> {
     }
   }
 
-  Widget _buildReference(_Reference ref) {
+  Widget _buildReference(_Reference ref, {bool isDark = false}) {
     return GestureDetector(
       onTap: ref.url.isNotEmpty
           ? () => WebViewService.openUrl(context, ref.url)
@@ -508,7 +537,9 @@ class _ReportDetailScreenState extends ConsumerState<ReportDetailScreen> {
         decoration: BoxDecoration(
           border: Border(
             left: BorderSide(
-              color: AppTheme.primaryColor.withValues(alpha: 0.2),
+              color: isDark
+                  ? AppTheme.primaryColor
+                  : AppTheme.primaryColor.withValues(alpha: 0.2),
               width: 2,
             ),
           ),
@@ -520,18 +551,22 @@ class _ReportDetailScreenState extends ConsumerState<ReportDetailScreen> {
                     TextSpan(
                       text: ref.title,
                       style: TextStyle(
-                        fontSize: 18,
-                        color: AppTheme.primaryColor,
+                        fontSize: 16,
+                        color:
+                            isDark ? AppTheme.cardColor : AppTheme.primaryColor,
                         decoration: TextDecoration.underline,
-                        decorationColor: AppTheme.primaryColor,
+                        decorationColor:
+                            isDark ? AppTheme.cardColor : AppTheme.primaryColor,
                         height: 1.8,
                       ),
                     ),
                     TextSpan(
                       text: ' — ${ref.date}',
                       style: TextStyle(
-                        fontSize: 18,
-                        color: AppTheme.mutedForegroundColor,
+                        fontSize: 16,
+                        color: isDark
+                            ? AppTheme.mutedDarkColor
+                            : AppTheme.mutedForegroundColor,
                         height: 1.8,
                       ),
                     ),
@@ -542,9 +577,10 @@ class _ReportDetailScreenState extends ConsumerState<ReportDetailScreen> {
                 ref.title,
                 style: TextStyle(
                   fontSize: 18,
-                  color: AppTheme.primaryColor,
+                  color: isDark ? AppTheme.cardColor : AppTheme.primaryColor,
                   decoration: TextDecoration.underline,
-                  decorationColor: AppTheme.primaryColor,
+                  decorationColor:
+                      isDark ? AppTheme.cardColor : AppTheme.primaryColor,
                   height: 1.8,
                 ),
               ),
@@ -604,7 +640,8 @@ class _ReportDetailScreenState extends ConsumerState<ReportDetailScreen> {
                   color: Colors.black38,
                   borderRadius: BorderRadius.circular(6),
                 ),
-                child: const Icon(Icons.zoom_in, color: Colors.white, size: 16),
+                child: const Icon(Icons.zoom_in,
+                    color: AppTheme.cardColor, size: 16),
               ),
             ),
           ],
@@ -739,7 +776,7 @@ class _LightboxPageState extends State<_LightboxPage> {
               left: 16,
               child: Text(
                 '${_current + 1} / ${widget.imagePaths.length}',
-                style: const TextStyle(color: Colors.white, fontSize: 14),
+                style: const TextStyle(color: AppTheme.cardColor, fontSize: 14),
               ),
             ),
           // 關閉按鈕
@@ -747,7 +784,8 @@ class _LightboxPageState extends State<_LightboxPage> {
             top: topPad + 4,
             right: 8,
             child: IconButton(
-              icon: const Icon(Icons.close, color: Colors.white, size: 26),
+              icon:
+                  const Icon(Icons.close, color: AppTheme.cardColor, size: 26),
               style: IconButton.styleFrom(backgroundColor: Colors.black45),
               onPressed: () => Navigator.of(context).pop(),
             ),
@@ -769,8 +807,8 @@ class _LightboxPageState extends State<_LightboxPage> {
                     height: 6,
                     decoration: BoxDecoration(
                       color: isActive
-                          ? Colors.white
-                          : Colors.white.withValues(alpha: 0.4),
+                          ? AppTheme.cardColor
+                          : AppTheme.cardColor.withValues(alpha: 0.4),
                       borderRadius: BorderRadius.circular(3),
                     ),
                   );
