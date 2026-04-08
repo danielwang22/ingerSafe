@@ -14,7 +14,7 @@ class AIService implements IAIService {
   AIService._();
 
   static final _riskTagRegex =
-      RegExp(r'\[RISK_LEVEL:(low|medium|high)\]', caseSensitive: false);
+      RegExp(r'\[RISK_LEVEL:(low|medium|high|unknown)\]', caseSensitive: false);
 
   static RiskLevel _parseRiskLevel(String text) {
     // 第一層：從標籤解析
@@ -27,6 +27,8 @@ class AIService implements IAIService {
           return RiskLevel.warning;
         case 'high':
           return RiskLevel.danger;
+        case 'unknown':
+          return RiskLevel.unknown;
       }
     }
 
