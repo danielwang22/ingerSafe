@@ -71,21 +71,20 @@ void _log(String line) {
 
 // 正常食品圖片（可放多張，同時送入 API）
 const _foodImagePaths = [
-  'test/assets/cake-10.jpg',
-  'test/assets/a4619ed12fdb88c8.jpg',
+  'test/assets/孕婦午餐.jpg',
 ];
 
 // 非食品圖片（可放多張）
 const _nonFoodImagePaths = [
   'test/assets/000001_1625131646.jpg',
-  'product1.jpg'
+  'test/assets/product1.jpg'
 ];
 
 // 正常補充說明文字
-const _normalText = '我在菜市場買了這些食物，想知道孕期可以食用嗎？';
+const _normalText = '我製作的這些食物，想知道我這位孕期可以食用嗎？';
 
 // 不正常/亂碼文字
-const _gibberishText = '這是我午餐的火鍋';
+const _gibberishText = '這是我午餐';
 
 // ─── 工具函式 ─────────────────────────────────────────────────────────────────
 
